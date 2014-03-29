@@ -36,8 +36,11 @@
             var players = new Object();
             var playerMeshes = new Object();
             var pid=null;
+            var mytype=1;
             var timer=0;
-            var charstr="characters/character1.png"
+
+            var charimgs= ["characters/character1.png",
+                            "characters/character2.png"];
 
             $(document).ready(function() {
                 var currCanvas = document.getElementById('c');
@@ -70,9 +73,9 @@
             }
             var char = null;
             var keys = new Array();
-            var rotX=0;
+            var rotX=Math.PI;
             var world = new THREE.Object3D();
-            function addPlayer(id,x,y){
+            function addPlayer(id,type,x,y){
                 if(playerMeshes[id]){
                     var p = playerMeshes[id];
                     p.position.x=x;
@@ -94,10 +97,29 @@
                         plane.add(mesh);
                         playerMeshes[id]=mesh;
                     };
-                    image.src = charstr;
+                    image.src = charimgs[type];
                     $("#collection").append(image);
                 }
 
+            }
+
+            function addChar(type,x,y){
+                var image = document.createElement( 'img' );
+                image.onload = function()  {
+                    var texture = new THREE.Texture( image );
+                    texture.needsUpdate = true;
+                    var material = new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite: false, depthTest: false});
+                    var h=80;
+                    var geometry = new THREE.PlaneGeometry(h,h);
+                    var mesh = new THREE.Mesh(geometry,material);
+                    material.side=THREE.DoubleSide;
+                    mesh.rotation.x+=Math.PI/2;
+                    mesh.position.z+=h/2;
+                    char=mesh;
+                    scene.add(char);
+                };
+                image.src =charimgs[mytype];
+                $("#collection").append(image);
             }
 
             function addObject(img,saveImg,x,y){
@@ -116,22 +138,13 @@
                     var material = new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite: false, depthTest: false});
                     var h = 150;
                     var geometry = new THREE.PlaneGeometry(h,h);
-                    if(img==charstr){
-                        h=80;
-                        geometry = new THREE.PlaneGeometry(h,h);
-                    }
                     var mesh = new THREE.Mesh(geometry,material);
                     material.side=THREE.DoubleSide;
                     mesh.rotation.x+=Math.PI/2;
                     mesh.position.z+=h/2;
-                    if(img==charstr){
-                        char=mesh;
-                        scene.add(char);
-                        } else {
                         mesh.position.x=x;
                         mesh.position.y=y;
                         plane.add(mesh);
-                    }
                 };
                 image.src = img;
                 $("#collection").append(image);
@@ -186,22 +199,22 @@
             }
 
             function checkMove(){
-                if (keys['38']) {
+                if (keys['38'] || keys['87']) {
                     // up arrow
                     if(char!=null){
                         moveUp(10);
                     }
                 }
-                if (keys['40']) {
+                if (keys['40'] || keys['83']) {
                     // up arrow
                     if(char!=null){
                         moveDown(10);
                     }
                 }
-                if (keys['37']) {
+                if (keys['37'] || keys['65']) {
                     moveLeft();
                 }
-                if (keys['39']) {
+                if (keys['39'] || keys['68']) {
                     moveRight();
                 }
             }
@@ -227,11 +240,10 @@
             } else {
             return;
             }
-            if(pid!=null){
-            pid.set({x:charx,y:chary});
-            } else {
-            pid = playerRef.push({x:charx,y:chary});
+            if(pid==null){
+                pid = playerRef.push();
             }
+            pid.set({type:mytype,x:charx,y:chary});
 
             }
 
@@ -243,7 +255,7 @@
             // camera
             var camera = new THREE.PerspectiveCamera(45, 1, 1, 10000);
             camera.position.y = -300;
-            camera.position.z = 200;
+            camera.position.z = 300;
             camera.rotation.x = 60 * (Math.PI / 180);
 
             // scene
@@ -257,7 +269,7 @@
             setXY();
             //var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000,1000), new THREE.MeshNormalMaterial());
             world.add(plane);
-            addObject(charstr,false,0,0);
+            addChar(mytype,0,0);
 
             // start animation
 
@@ -303,13 +315,16 @@
             }
             Object.keys(val).forEach(function(key){
             var obj = val[key];
-            if(key==pid.name()){
+            if(pid!=null && key==pid.name()){
             return;
             }
-            var img= charstr;
+            var type= obj.type;
+            if(type==undefined){
+            type=0;
+            }
             var x= obj.x;
             var y= obj.y;
-            addPlayer(key,x,y);
+            addPlayer(key,type,x,y);
             });
             });
             window.onbeforeunload = function(){
