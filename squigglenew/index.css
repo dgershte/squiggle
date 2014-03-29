@@ -5,14 +5,30 @@ body {
 #canvasWrapper {
 	background-color:rgba(0,0,0,0.1);
 	display: inline-block;
-	position:fixed;
+	position:absolute;
 	right:0;
+	top:0;
 	width:300px;
 	height:100%;
 }
 
 #canvas1 {
 	float:left;
+	float: left;
+margin-left: 10%;
+margin-top: 10%;
+box-shadow: 0 0 27px rgba(0,0,0,0.3);
+}
+
+#worldWrapper {
+	width:500px;
+	height:500px;
+}
+
+#container {
+	width:1050px;
+	margin:auto;
+	position:relative;
 }
 
 #c {
