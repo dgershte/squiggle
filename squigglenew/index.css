@@ -12,10 +12,13 @@ body {
 
 #canvas1 {
 	float:left;
-	width:70%;
-	height:100%;
 }
 
+#logo {
+position: fixed;
+height: 50px;
+bottom: 0;
+}
 
 #done {
 	position:absolute;
