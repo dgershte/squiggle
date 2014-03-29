@@ -15,13 +15,13 @@
 		<img id="pick" src="characters/pick.png"></img>
 		<img id="draw" src="characters/draw.png"></img>
 		<div id="charPicker">
-			<img onclick="setType(0)" style = "width:20px; height:48px" src="characters/c1.png"/>
-			<img onclick="setType(1)" style = "width:20px; height:48px" src="characters/c2.png"/>
-			<img onclick="setType(2)" style = "width:20px; height:48px" src="characters/c3.png"/>
-			<img onclick="setType(3)" style = "width:20px; height:48px" src="characters/c4.png"/>
-			<img onclick="setType(4)" style = "width:20px; height:48px" src="characters/c5.png"/>
-			<img onclick="setType(5)" style = "width:20px; height:48px" src="characters/char1.png"/>
-			<img onclick="setType(6)" style = "width:20px; height:48px" src="characters/char2.png"/>
+			<img onclick="setType(0)" style = "width:30px; height:48px" src="characters/c1.png"/>
+			<img onclick="setType(1)" style = "width:30px; height:48px" src="characters/c2.png"/>
+			<img onclick="setType(2)" style = "width:30px; height:48px" src="characters/c3.png"/>
+			<img onclick="setType(3)" style = "width:30px; height:48px" src="characters/c4.png"/>
+			<img onclick="setType(4)" style = "width:30px; height:48px" src="characters/c5.png"/>
+			<img onclick="setType(5)" style = "width:30px; height:48px" src="characters/char1.png"/>
+			<img onclick="setType(6)" style = "width:30px; height:48px" src="characters/char2.png"/>
 		</div>
 		<div id="worldWrapper">
         <canvas id="canvas1" width="500px" height="500px"></canvas>
@@ -92,8 +92,8 @@
                 canvas.on("after:render", function() {canvas.calcOffset();});
             })
 
-            var ww= 5000;
-            var hh= 5000;
+            var ww= 3000;
+            var hh= 3000;
             var charx=ww/2;//Math.random()*ww*.8+ww*.2;
             var chary=hh/2;//Math.random()*hh*.8+ww*.2;
             charx=Math.random()*ww*.6+ww*.2;
@@ -280,14 +280,15 @@
             if(timer>5){
             timer=0;
             if(moved){
-            randomrot=Math.random()*15*Math.PI/180;
-            if(Math.random()<.5){
-            randomrot=-randomrot;
-            }
+            if(randomrot==0){
+                randomrot=10*Math.PI/180;
             } else {
-            randomrot=0;
+                randomrot=-randomrot;
             }
             moved=false;
+            } else{
+            randomrot=0;
+            }
             char.rotation.z=randomrot;
             //char.position.x=randomx;
             //char.position.y=randomy;
@@ -323,7 +324,7 @@
             setXY();
             //var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000,1000), new THREE.MeshNormalMaterial());
             world.add(plane);
-            mytype=Math.floor(Math.random()*charimgs.length);
+            mytype=Math.floor(Math.random()*7);
             addChar(mytype,0,0);
 
             // start animation
