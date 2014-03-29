@@ -14,7 +14,7 @@
         <div id="container"></div>
         <canvas id="canvas1" width="800px" height="800px"></canvas>
         <div id="canvasWrapper">
-            <canvas id="c"></canvas>
+            <canvas id="c" width="300px" height="300px"></canvas>
             <div id="collection"></div>
         </div>
         <script src='https://cdn.firebase.com/v0/firebase.js'></script>
@@ -54,13 +54,13 @@
             var chary=50;//Math.random()*hh*.8+ww*.2;
             var objects = new Array();
             function doneDrawing() {
-                var objs = canvas.getObjects();  
-                var image = canvas.toDataURL("image/png");
+				var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
                 $("#done").attr({
                     'download':'image.png',
                     'href':image
                 });
                 canvas.clear();	
+				
                 addObject(image,true,0,0);
             }
             var char = null;
