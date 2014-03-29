@@ -1,8 +1,8 @@
 <html><head>
-<script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script src="JSARToolKit.js"></script><style type="text/css"></style>
+        <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script>
+        <script src="JSARToolKit.js"></script><style type="text/css"></style>
 <script src="Three.js"></script>
 <script>
-<!--
   threshold = 128;
   DEBUG = true;
 
@@ -89,7 +89,11 @@ function getModel(geometry, materials) {
 
     var tmp = new Float32Array(16);
 
+<<<<<<< HEAD:AR_mediaStream_three.html
 	renderer = new THREE.CanvasRenderer(); 
+=======
+    renderer = new THREE.CanvasRenderer(); 
+>>>>>>> f21c282ebf2d965538d99d4e75357c4d305f0809:squiggle2/AR_mediaStream_three.html
     
 	renderer.setSize(960, 720);
 
@@ -231,7 +235,6 @@ function getModel(geometry, materials) {
     cm[14] = mat.m23;
     cm[15] = 1;
   }
-// -->
 </script>
 <style>
   html {

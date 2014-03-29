@@ -142,6 +142,7 @@
             pivot.setScale(80);
             var cube;
             if (i == 64) {
+                /*
               var n = new Magi.Node();
               walas = n;
               var sc = 2.5 / (w.boundingBox.diameter);
@@ -153,12 +154,21 @@
               n.material = Magi.DefaultMaterial.get();
               n.material.floats.LightDiffuse = [1,1,1,1];
               n.material.floats.MaterialShininess = 6.0;
-              n.material.floats.MaterialDiffuse = [1,1,1,1];
+              n.material.floats.MaterialDiffuse = [1,1,1,1];*/
+              //cube.material.textures.Texture0 = new Magi.Texture();
+              //cube.material.textures.Texture0.image = "images/chalk.jpg";
+              var n = new Magi.ImageQuad("images/chalk.jpg");
               cube = n;
             } else {
-              cube = new Magi.Cube();
+              var n = new Magi.ImageQuad("images/chalk.jpg");
+              cube = n;
+              /*
+                cube = new Magi.Cube();
+
+              cube.material.textures.Texture0 = new Magi.Texture();
+              cube.material.textures.Texture0.image = "images/chalk.jpg";
               cube.setZ(-0.125);
-              cube.scaling[2] = 0.25;
+              cube.scaling[2] = 0.25;*/
             }
             pivot.appendChild(cube);
             var txt = new Magi.Text(i.toString());
