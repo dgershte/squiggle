@@ -12,7 +12,7 @@
     <body>
         <img id="logo" src="squiggle.png"></img>
         <div id="container"></div>
-        <canvas id="canvas1" width="800px" height="800px"></canvas>
+        <canvas id="canvas1" width="500px" height="500px" style="border:2px solid blue"></canvas>
         <div id="canvasWrapper">
             <canvas id="c" width="300px" height="300px"></canvas>
             <div id="collection"></div>
@@ -50,8 +50,8 @@
             });
             var ww= 10000;
             var hh= 10000;
-            var charx=50;//Math.random()*ww*.8+ww*.2;
-            var chary=50;//Math.random()*hh*.8+ww*.2;
+            var charx=ww/2;//Math.random()*ww*.8+ww*.2;
+            var chary=hh/2;//Math.random()*hh*.8+ww*.2;
             var objects = new Array();
             function doneDrawing() {
 				var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
@@ -233,7 +233,7 @@
 
             // renderer
             var renderer = new THREE.WebGLRenderer( { canvas: canvas1 } );
-            //renderer.setSize(window.innerWidth, window.innerHeight);
+            //renderer.setSize(300,300);
             //document.body.appendChild(renderer.domElement);
 
             // camera
