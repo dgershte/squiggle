@@ -11,6 +11,7 @@
     </head>
     <body>
         <div id="container"></div>
+			<canvas id="canvas1" width="800px" height="400px"></canvas>
 		<div id="canvasContainer">
 			<canvas id="c" width="400px" height="400px"></canvas>
 			<div id="done" onclick="doneDrawing()">done</div>
@@ -21,7 +22,6 @@
         <script defer="defer">
 
 			$(document).ready(function() {
-
 				canvas = new fabric.Canvas('c');
 				canvas.freeDrawingBrush.width = 10;
 				canvas.freeDrawingBrush.color = '#000';
@@ -143,15 +143,15 @@
             }
 
             // renderer
-            var renderer = new THREE.WebGLRenderer();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
+            var renderer = new THREE.WebGLRenderer( { canvas: canvas1 } );
+            //renderer.setSize(window.innerWidth, window.innerHeight);
+            //document.body.appendChild(renderer.domElement);
 
             // camera
             var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-            camera.position.y = -500;
-            camera.position.z = 500;
-            camera.rotation.x = 50 * (Math.PI / 180);
+            camera.position.y = -300;
+            camera.position.z = 200;
+            camera.rotation.x = 60 * (Math.PI / 180);
 
             // scene
             var scene = new THREE.Scene();
