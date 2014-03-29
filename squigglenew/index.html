@@ -15,11 +15,13 @@
 		<img id="pick" src="characters/pick.png"></img>
 		<img id="draw" src="characters/draw.png"></img>
 		<div id="charPicker">
-			<img onclick="setType(0)" src="characters/char1.png"/>
-			<img onclick="setType(1)" src="characters/char2.png"/>
-			<img onclick="setType(2)" src="characters/char3.png"/>
-			<img onclick="setType(3)" src="characters/char4.png"/>
-			<img onclick="setType(4)" src="characters/char1.png"/>
+			<img onclick="setType(0)" style = "width:20px; height:48px" src="characters/c1.png"/>
+			<img onclick="setType(1)" style = "width:20px; height:48px" src="characters/c2.png"/>
+			<img onclick="setType(2)" style = "width:20px; height:48px" src="characters/c3.png"/>
+			<img onclick="setType(3)" style = "width:20px; height:48px" src="characters/c4.png"/>
+			<img onclick="setType(4)" style = "width:20px; height:48px" src="characters/c5.png"/>
+			<img onclick="setType(5)" style = "width:20px; height:48px" src="characters/char1.png"/>
+			<img onclick="setType(6)" style = "width:20px; height:48px" src="characters/char2.png"/>
 		</div>
 		<div id="worldWrapper">
         <canvas id="canvas1" width="500px" height="500px"></canvas>
@@ -46,11 +48,15 @@
             var randomrot=0;
             var moved=false;
 
-            var charimgs= ["characters/char1.png",
+            var charimgs= ["characters/c1.png",
+                            "characters/c2.png",
+                            "characters/c3.png",
+                            "characters/c4.png",
+                            "characters/c5.png",
+                            "characters/char1.png",
                             "characters/char2.png",
                             "characters/char3.png",
-                            "characters/char4.png",
-                            "characters/char2.png",
+                            "characters/char4.png"
 									];
             function setType(t){
                 mytype=t;
@@ -119,7 +125,7 @@
                         texture.needsUpdate = true;
                         var material = new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite: false, depthTest: false});
                         h=80;
-                        var geometry = new THREE.PlaneGeometry(h,h);
+                        var geometry = new THREE.PlaneGeometry(.5*h,h);
                         var mesh = new THREE.Mesh(geometry,material);
                         material.side=THREE.DoubleSide;
                         mesh.rotation.x+=Math.PI/2;
@@ -141,7 +147,7 @@
                     texture.needsUpdate = true;
                     var material = new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite: false, depthTest: false});
                     var h=80;
-                    var geometry = new THREE.PlaneGeometry(h,2*h);
+                    var geometry = new THREE.PlaneGeometry(.5*h,h);
                     var mesh = new THREE.Mesh(geometry,material);
                     material.side=THREE.DoubleSide;
                     mesh.rotation.x+=Math.PI/2;
