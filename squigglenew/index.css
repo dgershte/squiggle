@@ -1,12 +1,35 @@
-#canvasContainer {
-	height:400px;
-	width:400px;
-	position:absolute;
-	bottom:0;
-	right:0;
+body {
+	overflow:hidden;
 }
+
+#canvasWrapper {
+	background-color:rgba(0,0,0,0.1);
+	display: inline-block;
+	position:fixed;
+	right:0;
+	width:30%;
+}
+
+#canvas1 {
+	float:left;
+	width:70%;
+	height:100%;
+}
+
 
 #done {
 	position:absolute;
 	bottom:0;
+}
+
+#collection {
+position: absolute;
+bottom: 0;
+height: 100px;
+overflow:scroll;
+}
+
+#collection img {
+	height:100%;
+	float:left;
 }

@@ -11,9 +11,9 @@
     </head>
     <body>
         <div id="container"></div>
-        <canvas id="canvas1" width="800px" height="400px"></canvas>
+        <canvas id="canvas1" width="800px" height="800px"></canvas>
         <div id="canvasContainer">
-            <canvas id="c" width="400px" height="400px"></canvas>
+            <canvas id="c"></canvas>
             <div id="done" onclick="doneDrawing()">done</div>
         </div>
         <script src='https://cdn.firebase.com/v0/firebase.js'></script>
@@ -22,7 +22,18 @@
         <script src="fabric.min.js"></script>
         <script defer="defer">
             var objs=new Object();
-            $(document).ready(function() {
+            var charstr="characters/character1.png"
+
+			$(document).ready(function() {
+			var currCanvas = document.getElementById('c');
+var currCtx = currCanvas.getContext('2d');
+var viewportWidth = window.innerWidth;
+var viewportHeight = window.innerHeight;
+currCanvas.style.position = "fixed";
+currCanvas.setAttribute("width", viewportWidth);
+currCanvas.setAttribute("height", viewportHeight);
+currCanvas.style.top = 0;
+currCanvas.style.left = 0;
                 canvas = new fabric.Canvas('c');
                 canvas.freeDrawingBrush.width = 10;
                 canvas.freeDrawingBrush.color = '#000';
@@ -56,11 +67,6 @@
                     nameRef.push({squiggle:img,x:charx,y:chary});
                     return;
                 }
-                var str ='char.png';
-                if(char!=null){
-                    str='tree.png';
-                }
-                char="";
 
                 var image = document.createElement( 'img' );
                 image.onload = function()  {
@@ -73,7 +79,7 @@
                     material.side=THREE.DoubleSide;
                     mesh.rotation.x+=Math.PI/2;
                     mesh.position.z+=100/2;
-                    if(img=='char.png'){
+                    if(img==charstr){
                         char=mesh;
                         scene.add(char);
                     } else {
@@ -83,6 +89,7 @@
                     }
                 };
                 image.src = img;
+				$("#collection").append(image);
             }
             // revolutions per second
             var angularSpeed = 0.2; 
@@ -194,7 +201,7 @@
             setXY();
             //var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000,1000), new THREE.MeshNormalMaterial());
             world.add(plane);
-            addObject('char.png',false,0,0);
+            addObject(charstr,false,0,0);
 
             // start animation
             animate();
@@ -210,6 +217,9 @@
             function checkKey(e) {
                 e = e || window.event;
                 keys[e.keyCode]=true;
+				if(e.keyCode == 13) {
+					doneDrawing();
+				}
             }
             var nameRef = new Firebase('https://squiggle.firebaseio.com/');
             nameRef.on('value', function(snapshot){
