@@ -7,47 +7,55 @@
                 padding: 0px;
             }
         </style>
-		<link rel="stylesheet" href="index.css" type="text/css"></link>
+        <link rel="stylesheet" href="index.css" type="text/css"></link>
     </head>
     <body>
         <div id="container"></div>
-			<canvas id="canvas1" width="800px" height="400px"></canvas>
-		<div id="canvasContainer">
-			<canvas id="c" width="400px" height="400px"></canvas>
-			<div id="done" onclick="doneDrawing()">done</div>
+        <canvas id="canvas1" width="800px" height="400px"></canvas>
+        <div id="canvasContainer">
+            <canvas id="c" width="400px" height="400px"></canvas>
+            <div id="done" onclick="doneDrawing()">done</div>
         </div>
-		<script src="Three.js"></script>
-		<script src="jquery.js"></script>
-		<script src="fabric.min.js"></script>
+        <script src='https://cdn.firebase.com/v0/firebase.js'></script>
+        <script src="Three.js"></script>
+        <script src="jquery.js"></script>
+        <script src="fabric.min.js"></script>
         <script defer="defer">
+            var objs=new Object();
+            $(document).ready(function() {
+                canvas = new fabric.Canvas('c');
+                canvas.freeDrawingBrush.width = 10;
+                canvas.freeDrawingBrush.color = '#000';
+                canvas.isDrawingMode = true;
+                canvas.width = document.documentElement.clientWidth;
+                canvas.height = document.documentElement.clientHeight;
+                canvas.on("after:render", function() {canvas.calcOffset();});
 
-			$(document).ready(function() {
-				canvas = new fabric.Canvas('c');
-				canvas.freeDrawingBrush.width = 10;
-				canvas.freeDrawingBrush.color = '#000';
-				canvas.isDrawingMode = true;
-				canvas.width = document.documentElement.clientWidth;
-				canvas.height = document.documentElement.clientHeight;
-				canvas.on("after:render", function() {canvas.calcOffset();});
-
-			});
-
+            });
+            var ww= 10000;
+            var hh= 10000;
+            var charx=ww/2;//Math.random()*ww;
+            var chary=hh/2;//Math.random()*hh;
             var objects = new Array();
-			function doneDrawing() {
-		    	var image = canvas.toDataURL("image/png");
-    			$("#done").attr({
-        			'download':'image.png',
-        			'href':image
-    			});
-    			canvas.clear();	
-				addObject(image);
-			}
+            function doneDrawing() {
+                var image = canvas.toDataURL("image/png");
+                $("#done").attr({
+                    'download':'image.png',
+                    'href':image
+                });
+                canvas.clear();	
+                addObject(image,true,0,0);
+            }
             var char = null;
             var keys = new Array();
             var rotX=0;
             var world = new THREE.Object3D();
 
-            function addObject(img){
+            function addObject(img,saveImg,x,y){
+                if(saveImg){
+                    nameRef.push({squiggle:img,x:charx,y:chary});
+                    return;
+                }
                 var str ='char.png';
                 if(char!=null){
                     str='tree.png';
@@ -56,7 +64,7 @@
 
                 var image = document.createElement( 'img' );
                 image.onload = function()  {
-            		var texture = new THREE.Texture( image );
+                    var texture = new THREE.Texture( image );
                     texture.needsUpdate = true;
                     var material = new THREE.MeshBasicMaterial({map:texture});
                     material.transparent=true;
@@ -65,17 +73,16 @@
                     material.side=THREE.DoubleSide;
                     mesh.rotation.x+=Math.PI/2;
                     mesh.position.z+=100/2;
-					if(img=='char.png'){
+                    if(img=='char.png'){
                         char=mesh;
                         scene.add(char);
                     } else {
-                        mesh.position.x=Math.random()*100;
-                        mesh.position.y=Math.random()*100;
+                        mesh.position.x=x;
+                        mesh.position.y=y;
                         plane.add(mesh);
                     }
                 };
                 image.src = img;
-                
             }
             // revolutions per second
             var angularSpeed = 0.2; 
@@ -89,31 +96,54 @@
                 rotX+=.1;
             }
 
-            function moveUp(){
-                var yd = Math.sin(world.rotation.z)*10;
-                var xd = Math.cos(world.rotation.z)*10;
-                plane.position.x-=yd;
-                plane.position.y-=xd;
+            function setXY(){
+                if(charx<0){
+                    charx=ww;
+                }
+                if(chary<0){
+                    chary=hh;
+                }
+                if(charx>ww){
+                    charx=0;
+                }
+                if(chary>hh){
+                    chary=0;
+                }
+                plane.position.x=-charx;
+                plane.position.y=-chary;
             }
 
-            function moveDown(){
-                var yd = Math.sin(world.rotation.z)*10;
-                var xd = Math.cos(world.rotation.z)*10;
-                plane.position.x+=yd;
-                plane.position.y+=xd;
+            function moveUp(dist){
+                var yd = Math.sin(world.rotation.z)*dist;
+                var xd = Math.cos(world.rotation.z)*dist;
+                charx+=yd;
+                chary+=xd;
+                setXY();
+                //plane.position.x-=yd;
+                //plane.position.y-=xd;
+            }
+
+            function moveDown(dist){
+                var yd = Math.sin(world.rotation.z)*dist;
+                var xd = Math.cos(world.rotation.z)*dist;
+                //plane.position.x+=yd;
+                //plane.position.y+=xd;
+                charx-=yd;
+                chary-=xd;
+                setXY();
             }
 
             function checkMove(){
                 if (keys['38']) {
-                // up arrow
-                if(char!=null){
-                    moveUp();
+                    // up arrow
+                    if(char!=null){
+                        moveUp(10);
                     }
                 }
                 if (keys['40']) {
-                // up arrow
-                if(char!=null){
-                    moveDown();
+                    // up arrow
+                    if(char!=null){
+                        moveDown(10);
                     }
                 }
                 if (keys['37']) {
@@ -154,15 +184,17 @@
             camera.rotation.x = 60 * (Math.PI / 180);
 
             // scene
+            //renderer.setClearColor(0xffffff);
             var scene = new THREE.Scene();
- //           scene.fog = new THREE.Fog( '#00ffff', .5 );
+            scene.fog = new THREE.Fog(0xffffff, 1,1000);
 
-            // plane
-            var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000), new THREE.MeshNormalMaterial());
-            plane.overdraw = true;
             scene.add(world);
+            // plane
+            var plane = new THREE.Mesh(new THREE.PlaneGeometry(0,0), new THREE.MeshNormalMaterial());
+            setXY();
+            //var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000,1000), new THREE.MeshNormalMaterial());
             world.add(plane);
-            addObject('char.png');
+            addObject('char.png',false,0,0);
 
             // start animation
             animate();
@@ -179,6 +211,25 @@
                 e = e || window.event;
                 keys[e.keyCode]=true;
             }
+            var nameRef = new Firebase('https://squiggle.firebaseio.com/');
+            nameRef.on('value', function(snapshot){
+                var val = snapshot.val();
+                if(val==null){
+                    return;
+                }
+                Object.keys(val).forEach(function(key){
+                    if(!objs[key]){
+                        objs[key]=true;
+                    } else {
+                        return;
+                    }
+                    var obj = val[key];
+                    var img= obj.squiggle;
+                    var x= obj.x;
+                    var y= obj.y;
+                    addObject(img,false,x,y);
+                });
+            });
         </script>
     </body>
 </html>
