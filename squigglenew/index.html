@@ -178,6 +178,9 @@
             function checkKey(e) {
                 e = e || window.event;
                 keys[e.keyCode]=true;
+				if(e.keyCode == 13) {
+					doneDrawing();
+				}
             }
         </script>
     </body>
