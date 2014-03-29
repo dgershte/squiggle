@@ -2,6 +2,24 @@ body {
 	overflow:hidden;
 }
 
+#pick {
+position: relative;
+margin-left: -200px;
+float: left;
+margin-top:50px;
+}
+
+#draw {
+float: right;
+margin-right: -200px;
+}
+
+#enter {
+margin-top: -28px;
+text-align: center;
+color: rgba(0, 0, 0, 0.2);
+}
+
 #canvasWrapper {
 background-color: rgba(0,0,0,0.1);
 display: inline-block;

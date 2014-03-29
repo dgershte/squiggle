@@ -12,19 +12,22 @@
     <body>
         <img id="logo" src="squiggle.png"></img>
 		<div id="container">
+		<img id="pick" src="characters/pick.png"></img>
+		<img id="draw" src="characters/draw.png"></img>
 		<div id="charPicker">
-			<img src="characters/char1.png"/>
-			<img src="characters/char2.png"/>
-			<img src="characters/char3.png"/>
-			<img src="characters/char4.png"/>
-			<img src="characters/char1.png"/>
+			<img onclick="setType(0)" src="characters/char1.png"/>
+			<img onclick="setType(1)" src="characters/char2.png"/>
+			<img onclick="setType(2)" src="characters/char3.png"/>
+			<img onclick="setType(3)" src="characters/char4.png"/>
+			<img onclick="setType(4)" src="characters/char1.png"/>
 		</div>
 		<div id="worldWrapper">
         <canvas id="canvas1" width="500px" height="500px"></canvas>
 		</div>
         <div id="canvasWrapper">
             <canvas id="c" width="300px" height="300px"></canvas>
-            <div id="collection"></div>
+       		<div id="enter">press enter</div>
+		     <div id="collection"></div>
         </div>
 		</div>
         <script src='https://cdn.firebase.com/v0/firebase.js'></script>
@@ -138,7 +141,7 @@
                     texture.needsUpdate = true;
                     var material = new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite: false, depthTest: false});
                     var h=80;
-                    var geometry = new THREE.PlaneGeometry(h,h);
+                    var geometry = new THREE.PlaneGeometry(h,2*h);
                     var mesh = new THREE.Mesh(geometry,material);
                     material.side=THREE.DoubleSide;
                     mesh.rotation.x+=Math.PI/2;
