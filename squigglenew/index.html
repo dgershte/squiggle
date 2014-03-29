@@ -67,7 +67,7 @@
             var keys = new Array();
             var rotX=0;
             var world = new THREE.Object3D();
-            function addPlayer(img,saveImg,x,y){
+            function addPlayer(id,x,y){
                 if(playerMeshes[id]){
                     var p = playerMeshes[id];
                     p.position.x=x;
@@ -79,10 +79,7 @@
                         texture.needsUpdate = true;
                         var material = new THREE.MeshBasicMaterial({map:texture});
                         material.transparent=true;
-                        var h = 150;
-                        if(img==charstr){
-                            h=80;
-                        }
+                        h=80;
                         var geometry = new THREE.PlaneGeometry(h,h);
                         var mesh = new THREE.Mesh(geometry,material);
                         material.side=THREE.DoubleSide;
@@ -93,7 +90,7 @@
                         plane.add(mesh);
                         playerMeshes[id]=mesh;
                     };
-                    image.src = img;
+                    image.src = charstr;
                     $("#collection").append(image);
                 }
 
@@ -307,7 +304,7 @@
                     var img= charstr;
                     var x= obj.x;
                     var y= obj.y;
-                    addPlayer(img,false,x,y);
+                    addPlayer(key,x,y);
                 });
             });
             animate();
