@@ -92,8 +92,8 @@
                 canvas.on("after:render", function() {canvas.calcOffset();});
             })
 
-            var ww= 2500;
-            var hh= 2500;
+            var ww= 5000;
+            var hh= 5000;
             var charx=ww/2;//Math.random()*ww*.8+ww*.2;
             var chary=hh/2;//Math.random()*hh*.8+ww*.2;
             charx=Math.random()*ww*.6+ww*.2;
@@ -353,7 +353,12 @@
 				e.stopPropagation();
 				canvas.clear();	
 				return false;
-			}
+            }
+            if(e.keyCode==32){
+                charx=Math.random()*ww;
+                chary=Math.random()*hh;
+                setXY();
+            }
             }
             var nameRef = new Firebase('https://squiggle.firebaseio.com/squiggles/');
             nameRef.on('value', function(snapshot){
