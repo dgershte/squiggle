@@ -24,7 +24,7 @@ box-shadow: 0 0 27px rgba(0,0,0,0.3);
 }
 
 #container {
-width: 880px;
+width: 872px;
 margin: auto;
 height: 500px;
 position: relative;
@@ -36,14 +36,14 @@ background-color: rgba(0,0,0,0.1);
 }
 
 #charPicker {
-	width:78px;
+	width:72px;
 	float:left;
 	background-color: rgba(0,0,0,0.1);
 }
 
 #charPicker img {
-height: 96px;
-	margin-left:15px;
+height: 76px;
+padding:10px 20px;
 }
 
 #charPicker img:hover {
