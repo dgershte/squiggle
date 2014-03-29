@@ -107,10 +107,11 @@
                     var material = new THREE.MeshBasicMaterial({map:texture});
                     material.transparent=true;
                     var h = 150;
+                    var geometry = new THREE.PlaneGeometry(h*1.6,h);
                     if(img==charstr){
                         h=80;
+                        geometry = new THREE.PlaneGeometry(h,h);
                     }
-                    var geometry = new THREE.PlaneGeometry(h,h);
                     var mesh = new THREE.Mesh(geometry,material);
                     material.side=THREE.DoubleSide;
                     mesh.rotation.x+=Math.PI/2;
