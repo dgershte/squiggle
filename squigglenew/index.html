@@ -50,8 +50,8 @@
             });
             var ww= 10000;
             var hh= 10000;
-            var charx=Math.random()*ww*.8+ww*.2;
-            var chary=Math.random()*hh*.8+ww*.2;
+            var charx=50;//Math.random()*ww*.8+ww*.2;
+            var chary=50;//Math.random()*hh*.8+ww*.2;
             var objects = new Array();
             function doneDrawing() {
 				var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
@@ -72,7 +72,7 @@
                     var p = playerMeshes[id];
                     p.position.x=x;
                     p.position.y=y;
-                    } else {
+                } else {
                     var image = document.createElement( 'img' );
                     image.onload = function()  {
                         var texture = new THREE.Texture( image );
@@ -215,7 +215,7 @@
             animate();
             });
             timer++;
-            if(timer>20){
+            if(timer>5){
             timer=0;
             } else {
             return;
@@ -291,16 +291,14 @@
             var playerRef = new Firebase('https://squiggle.firebaseio.com/players/');
             playerRef.on('value', function(snapshot){
             var val = snapshot.val();
-            if(val==null){
+            if(val==null || snapshot.name == pid){
             return;
             }
             Object.keys(val).forEach(function(key){
-            if(!players[key]){
-            players[key]=true;
-            } else {
+            var obj = val[key];
+            if(key==pid.name()){
             return;
             }
-            var obj = val[key];
             var img= charstr;
             var x= obj.x;
             var y= obj.y;
