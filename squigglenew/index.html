@@ -25,6 +25,7 @@
 		</div>
 		<div id="worldWrapper">
         <canvas id="canvas1" width="500px" height="500px"></canvas>
+            <canvas id="minimap" width="100px" height="100px" style="position:absolute; border:1px solid black;margin-left:-110px; margin-top:5px;"></canvas>
 		</div>
         <div id="canvasWrapper">
             <canvas id="c" width="300px" height="300px"></canvas>
@@ -51,7 +52,15 @@
             var randomrot=0;
             var moved=false;
 			var latestimg1 = "";
-			var latestimg2 = "";
+            var latestimg2 = "";
+
+            function point(x,y,p){
+                this.x=x;
+                this.y=y;
+                this.p=p;
+            }
+
+            var posns = new Object();
 
             var charimgs= ["characters/c1.png",
                             "characters/c2.png",
@@ -99,8 +108,8 @@
                 canvas.on("after:render", function() {canvas.calcOffset();});
             })
 
-            var ww= 3000;
-            var hh= 3000;
+            var ww= 5000;
+            var hh= 5000;
             var charx=ww/2;//Math.random()*ww*.8+ww*.2;
             var chary=hh/2;//Math.random()*hh*.8+ww*.2;
             charx=Math.random()*ww*.6+ww*.2;
@@ -149,6 +158,7 @@
                         mesh.position.y=y;
                         plane.add(mesh);
                         playerMeshes[id]=mesh;
+                        posns[id]=new point(x,y,1);
                     };
                     image.src = charimgs[type];
                 }
@@ -200,6 +210,7 @@
                         mesh.position.x=x;
                         mesh.position.y=y;
                         plane.add(mesh);
+                        posns[image]=new point(x,y,0);
                 };
                 image.src = img;
 				var tmplatest = latestimg1;
@@ -285,6 +296,32 @@
 
             // this function is executed on each animation frame
             function animate(){
+            var c=document.getElementById("minimap");
+            var ctx=c.getContext("2d");
+            ctx.clearRect(0,0,100,100);
+            ctx.fillStyle="#FF0000";
+            ctx.fillRect(Math.floor(charx/ww*100),Math.floor(chary/hh*100),2,2);
+
+
+            Object.keys(posns).forEach(function(key){
+            var posn = posns[key];
+            if(posn.p==1){
+                ctx.fillStyle="#0000FF";
+                ctx.fillRect(Math.floor(posn.x/ww*100),Math.floor(posn.y/hh*100),2,2);
+                } else {
+                ctx.fillStyle="#ff00ff";
+                ctx.fillRect(Math.floor(posn.x/ww*100),Math.floor(posn.y/hh*100),3,3);
+                }
+            });
+
+
+            ctx.stroke();
+
+
+
+
+
+            //console.log(Math.floor(charx/ww*100)+ " "+Math.floor(chary/hh*100));
             //change type here
             //setType(mytype);
             checkMove();
