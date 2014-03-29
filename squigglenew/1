@@ -14,7 +14,7 @@
         <div id="container"></div>
         <canvas id="canvas1" width="800px" height="800px"></canvas>
         <div id="canvasWrapper">
-            <canvas id="c" width="300px" height="300px"></canvas>
+            <canvas id="c"></canvas>
             <div id="collection"></div>
         </div>
         <script src='https://cdn.firebase.com/v0/firebase.js'></script>
@@ -54,13 +54,13 @@
             var chary=Math.random()*hh*.8+ww*.2;
             var objects = new Array();
             function doneDrawing() {
-				var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+				var objs = canvas.getObjects();  
+              var image = canvas.toDataURL("image/png");
                 $("#done").attr({
                     'download':'image.png',
                     'href':image
                 });
                 canvas.clear();	
-				
                 addObject(image,true,0,0);
             }
             var char = null;
@@ -201,30 +201,30 @@
 
             // this function is executed on each animation frame
             function animate(){
-            checkMove();
-            // render
-            var angleChange=rotX;
-            world.rotation.z=angleChange;
-            for ( var i = 0, l = plane.children.length; i < l; i ++ ) {
-            plane.children[ i ].rotation.y=-angleChange;
-            //lookAt( sphere.position );
-            }
-            renderer.render(scene, camera);
-            // request new frame
-            requestAnimationFrame(function(){
-            animate();
-            });
-            timer++;
-            if(timer>20){
-            timer=0;
-            } else {
-            return;
-            }
-            if(pid!=null){
-            pid.set({x:charx,y:chary});
-            } else {
-            pid = playerRef.push({x:charx,y:chary});
-            }
+                checkMove();
+                // render
+                var angleChange=rotX;
+                world.rotation.z=angleChange;
+                for ( var i = 0, l = plane.children.length; i < l; i ++ ) {
+                    plane.children[ i ].rotation.y=-angleChange;
+                    //lookAt( sphere.position );
+                }
+                renderer.render(scene, camera);
+                // request new frame
+                requestAnimationFrame(function(){
+                    animate();
+                });
+                    timer++;
+                    if(timer>20){
+                    timer=0;
+                    } else {
+                    return;
+                    }
+                if(pid!=null){
+                    pid.set({x:charx,y:chary});
+                } else {
+                    pid = playerRef.push({x:charx,y:chary});
+                }
 
             }
 
@@ -259,59 +259,59 @@
             document.onkeydown = checkKey;
 
             function checkKeyUp(e) {
-            keys[e.keyCode]=false;
+                keys[e.keyCode]=false;
             }
 
             function checkKey(e) {
-            e = e || window.event;
-            keys[e.keyCode]=true;
-            if(e.keyCode == 13) {
-            doneDrawing();
-            }
+                e = e || window.event;
+                keys[e.keyCode]=true;
+                if(e.keyCode == 13) {
+                    doneDrawing();
+                }
             }
             var nameRef = new Firebase('https://squiggle.firebaseio.com/squiggles/');
             nameRef.on('value', function(snapshot){
-            var val = snapshot.val();
-            if(val==null){
-            return;
-            }
-            Object.keys(val).forEach(function(key){
-            if(!objs[key]){
-            objs[key]=true;
-            } else {
-            return;
-            }
-            var obj = val[key];
-            var img= obj.squiggle;
-            var x= obj.x;
-            var y= obj.y;
-            addObject(img,false,x,y);
-            });
+                var val = snapshot.val();
+                if(val==null){
+                    return;
+                }
+                Object.keys(val).forEach(function(key){
+                    if(!objs[key]){
+                        objs[key]=true;
+                        } else {
+                        return;
+                    }
+                    var obj = val[key];
+                    var img= obj.squiggle;
+                    var x= obj.x;
+                    var y= obj.y;
+                    addObject(img,false,x,y);
+                });
             });
             var playerRef = new Firebase('https://squiggle.firebaseio.com/players/');
             playerRef.on('value', function(snapshot){
-            var val = snapshot.val();
-            if(val==null){
-            return;
-            }
-            Object.keys(val).forEach(function(key){
-            if(!players[key]){
-            players[key]=true;
-            } else {
-            return;
-            }
-            var obj = val[key];
-            var img= charstr;
-            var x= obj.x;
-            var y= obj.y;
-            addPlayer(key,x,y);
-            });
-            });
-            window.onbeforeunload = function(){
-                if(pid!=null){
-                    pid.remove();
+                var val = snapshot.val();
+                if(val==null){
+                    return;
                 }
-            }
+                Object.keys(val).forEach(function(key){
+                    if(!players[key]){
+                        players[key]=true;
+                        } else {
+                        return;
+                    }
+                    var obj = val[key];
+                    var img= charstr;
+                    var x= obj.x;
+                    var y= obj.y;
+                    addPlayer(key,x,y);
+                });
+                });
+                window.onbeforeunload = function(){
+                if(pid){
+                pid.remove();
+                }
+                   }
             animate();
         </script>
     </body>
