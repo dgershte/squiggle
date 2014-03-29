@@ -97,8 +97,11 @@
             }
 
             function addObject(img,saveImg,x,y){
+                var h= 250;
                 if(saveImg){
-                    nameRef.push({squiggle:img,x:charx,y:chary});
+                    var yd = Math.sin(world.rotation.z)*20;
+                    var xd = Math.cos(world.rotation.z)*20;
+                    nameRef.push({squiggle:img,x:charx-xd,y:chary-yd});
                     return;
                 }
 
@@ -143,16 +146,16 @@
 
             function setXY(){
                 if(charx<0){
-                    charx=ww;
-                }
-                if(chary<0){
-                    chary=hh;
-                }
-                if(charx>ww){
                     charx=0;
                 }
-                if(chary>hh){
+                if(chary<0){
                     chary=0;
+                }
+                if(charx>ww){
+                    charx=ww;
+                }
+                if(chary>hh){
+                    chary=hh;
                 }
                 plane.position.x=-charx;
                 plane.position.y=-chary;
