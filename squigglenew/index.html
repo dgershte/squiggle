@@ -75,8 +75,7 @@
                     image.onload = function()  {
                         var texture = new THREE.Texture( image );
                         texture.needsUpdate = true;
-                        var material = new THREE.MeshBasicMaterial({map:texture});
-                        material.transparent=true;
+                        var material = new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite: false, depthTest: false});
                         h=80;
                         var geometry = new THREE.PlaneGeometry(h,h);
                         var mesh = new THREE.Mesh(geometry,material);
@@ -107,10 +106,9 @@
                 image.onload = function()  {
                     var texture = new THREE.Texture( image );
                     texture.needsUpdate = true;
-                    var material = new THREE.MeshBasicMaterial({map:texture});
-                    material.transparent=true;
+                    var material = new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite: false, depthTest: false});
                     var h = 150;
-                    var geometry = new THREE.PlaneGeometry(h*1.6,h);
+                    var geometry = new THREE.PlaneGeometry(h,h);
                     if(img==charstr){
                         h=80;
                         geometry = new THREE.PlaneGeometry(h,h);
@@ -231,12 +229,12 @@
             }
 
             // renderer
-            var renderer = new THREE.WebGLRenderer( { canvas: canvas1 } );
+            var renderer = new THREE.WebGLRenderer( { canvas: canvas1, alpha:true } );
             //renderer.setSize(300,300);
             //document.body.appendChild(renderer.domElement);
 
             // camera
-            var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+            var camera = new THREE.PerspectiveCamera(45, 1, 1, 10000);
             camera.position.y = -300;
             camera.position.z = 200;
             camera.rotation.x = 60 * (Math.PI / 180);
@@ -248,7 +246,7 @@
 
             scene.add(world);
             // plane
-            var plane = new THREE.Mesh(new THREE.PlaneGeometry(0,0), new THREE.MeshNormalMaterial());
+            var plane = new THREE.Mesh(new THREE.PlaneGeometry(0,0), new THREE.MeshNormalMaterial({transparent:true}));
             setXY();
             //var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000,1000), new THREE.MeshNormalMaterial());
             world.add(plane);
