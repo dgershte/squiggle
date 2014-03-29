@@ -1,4 +1,17 @@
-var eps = 10;
+var eps = 50;
+var globalfaces = new Array();
+var globali=0;
+var charpos=1;
+var lastpos=0;
+var seen = new Array();
+var squares = new Array();
+
+function ssquare(p0,p1,p2,p3){
+    this.p0=p0;
+    this.p1=p1;
+    this.p2=p2;
+    this.p3=p3;
+}
 
 function point(x,y){
     this.x=x;
@@ -77,3 +90,50 @@ function comparePoints(p0,p1){
         return true;
     }
 }
+
+function connected(i,j){
+    if(!exists(i) || !exists(j)){
+        return false;
+    }
+    var touch = sidesTouch(squares[i],squares[j]);
+    if(touch==0){
+        return false;
+    }
+    //we know rotations here but ignore for now
+    return true;
+}
+
+function canTraverse(face0,face1){
+    return true;
+}
+
+function exists(i){
+    return seen[i]==true;
+}
+
+function updateChar(){
+    var i =charpos;
+    for(var j=0;j<globalfaces.length;j++){
+        if(charpos!=j){
+           if(connected(i,j) && canTraverse(i,j)){
+               if(lastpos!=j){
+                lastpos=i;
+                charpos=j;
+               }
+           }
+        }
+    }
+}
+
+function face(id){
+    this.id=id;
+}
+
+function addfaces(){
+    var i=0;
+    while(i<24){
+        globalfaces.push(i);
+        i++;
+    }
+}
+addfaces();
