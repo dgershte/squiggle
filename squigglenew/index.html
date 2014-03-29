@@ -14,7 +14,7 @@
         <div id="container"></div>
         <canvas id="canvas1" width="800px" height="800px"></canvas>
         <div id="canvasWrapper">
-            <canvas id="c"></canvas>
+            <canvas id="c" width="300px" height="300px"></canvas>
         	<div id="collection"></div>
 		</div>
         <script src='https://cdn.firebase.com/v0/firebase.js'></script>
@@ -26,16 +26,16 @@
             var charstr="characters/character1.png"
 
 			$(document).ready(function() {
-			var currCanvas = document.getElementById('c');
+/*			var currCanvas = document.getElementById('c');
 var currCtx = currCanvas.getContext('2d');
-var viewportWidth = window.innerWidth;
+//var viewportWidth = window.innerWidth;
 var viewportHeight = window.innerHeight;
 currCanvas.style.position = "fixed";
-currCanvas.setAttribute("width", viewportWidth);
+//currCanvas.setAttribute("width", viewportWidth);
 currCanvas.setAttribute("height", viewportHeight);
 currCanvas.style.top = 0;
 currCanvas.style.left = 0;
-                canvas = new fabric.Canvas('c');
+ */               canvas = new fabric.Canvas('c');
                 canvas.freeDrawingBrush.width = 10;
                 canvas.freeDrawingBrush.color = '#000';
                 canvas.isDrawingMode = true;
@@ -50,7 +50,8 @@ currCanvas.style.left = 0;
             var chary=hh/2;//Math.random()*hh;
             var objects = new Array();
             function doneDrawing() {
-                var image = canvas.toDataURL("image/png");
+				var objs = canvas.getObjects();  
+              var image = canvas.toDataURL("image/png");
                 $("#done").attr({
                     'download':'image.png',
                     'href':image
