@@ -84,14 +84,14 @@
                 canvas.freeDrawingBrush.color = '#000';
                 canvas.isDrawingMode = true;
                 canvas.on("after:render", function() {canvas.calcOffset();});
-            });
+            })
 
             var ww= 2500;
             var hh= 2500;
             var charx=ww/2;//Math.random()*ww*.8+ww*.2;
             var chary=hh/2;//Math.random()*hh*.8+ww*.2;
-            charx=Math.random()*ww*.8+ww*.2;
-            chary=Math.random()*hh*.8+hh*.2;
+            charx=Math.random()*ww*.6+ww*.2;
+            chary=Math.random()*hh*.6+hh*.2;
             var objects = new Array();
             function doneDrawing() {
 				var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
@@ -195,16 +195,16 @@
 
             function setXY(){
                 if(charx<0){
-                    charx=ww;
-                }
-                if(chary<0){
-                    chary=hh;
-                }
-                if(charx>ww){
                     charx=0;
                 }
-                if(chary>hh){
+                if(chary<0){
                     chary=0;
+                }
+                if(charx>ww){
+                    charx=ww;
+                }
+                if(chary>hh){
+                    chary=hh;
                 }
                 plane.position.x=-charx;
                 plane.position.y=-chary;
