@@ -11,17 +11,28 @@
     </head>
     <body>
         <div id="container"></div>
-			<canvas id="canvas1" width="800px" height="400px"></canvas>
-		<div id="canvasContainer">
-			<canvas id="c" width="400px" height="400px"></canvas>
-			<div id="done" onclick="doneDrawing()">done</div>
-        </div>
+			<canvas id="canvas1" width="800px" height="800px"></canvas>
+		<div id="canvasWrapper">
+			<canvas id="c"></canvas>
+        	<div id="collection"></div>
+		</div>
 		<script src="Three.js"></script>
 		<script src="jquery.js"></script>
 		<script src="fabric.min.js"></script>
         <script defer="defer">
 
 			$(document).ready(function() {
+			var currCanvas = document.getElementById('c');
+var currCtx = currCanvas.getContext('2d');
+var viewportWidth = window.innerWidth;
+var viewportHeight = window.innerHeight;
+currCanvas.style.position = "fixed";
+currCanvas.setAttribute("width", viewportWidth);
+currCanvas.setAttribute("height", viewportHeight);
+currCanvas.style.top = 0;
+currCanvas.style.left = 0;
+
+
 				canvas = new fabric.Canvas('c');
 				canvas.freeDrawingBrush.width = 10;
 				canvas.freeDrawingBrush.color = '#000';
@@ -75,6 +86,7 @@
                     }
                 };
                 image.src = img;
+				$("#collection").append(image);
                 
             }
             // revolutions per second
@@ -162,7 +174,7 @@
             plane.overdraw = true;
             scene.add(world);
             world.add(plane);
-            addObject('char.png');
+            addObject('characters/character1.png');
 
             // start animation
             animate();
