@@ -26,6 +26,7 @@
             var players = new Object();
             var playerMeshes = new Object();
             var pid=null;
+            var timer=0;
             var charstr="characters/character1.png"
 
             $(document).ready(function() {
@@ -212,16 +213,22 @@
                     //lookAt( sphere.position );
                 }
                 renderer.render(scene, camera);
-                if(pid!=null){
-                    playerRef.child(pid).set({squiggle:img,x:charx,y:chary});
-                    } else {
-                    pid = playerRef.push({squiggle:img,x:charx,y:chary});
-                }
-
                 // request new frame
                 requestAnimationFrame(function(){
                     animate();
                 });
+                    timer++;
+                    if(timer>20){
+                    timer=0;
+                    } else {
+                    return;
+                    }
+                if(pid!=null){
+                    pid.set({x:charx,y:chary});
+                } else {
+                    pid = playerRef.push({x:charx,y:chary});
+                }
+
             }
 
             // renderer
@@ -249,7 +256,6 @@
             addObject(charstr,false,0,0);
 
             // start animation
-            animate();
 
             //addlisteners();
             document.onkeyup = checkKeyUp;
@@ -304,6 +310,7 @@
                     addPlayer(img,false,x,y);
                 });
             });
+            animate();
         </script>
     </body>
 </html>
