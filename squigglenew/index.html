@@ -328,6 +328,12 @@
 
             function checkKeyUp(e) {
             keys[e.keyCode]=false;
+				e.preventDefault();
+				if(e.keyCode == 8) {
+					e.preventDefault();
+					e.stopPropagation();
+					return false;
+				}
             }
 
             function checkKey(e) {
@@ -336,6 +342,12 @@
             if(e.keyCode == 13) {
             doneDrawing();
             }
+			else if(e.keyCode == 8) {
+				e.preventDefault();
+				e.stopPropagation();
+				canvas.clear();	
+				return false;
+			}
             }
             var nameRef = new Firebase('https://squiggle.firebaseio.com/squiggles/');
             nameRef.on('value', function(snapshot){
