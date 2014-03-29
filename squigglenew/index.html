@@ -38,6 +38,10 @@
             var pid=null;
             var mytype=1;
             var timer=0;
+            var randomx=0;
+            var randomy=0;
+            var randomrot=0;
+            var moved=false;
 
             var charimgs= ["characters/char1.png",
                             "characters/char2.png",
@@ -79,8 +83,8 @@
                 canvas.on("after:render", function() {canvas.calcOffset();});
             });
 
-            var ww= 4000;
-            var hh= 4000;
+            var ww= 1000;
+            var hh= 1000;
             var charx=ww/2;//Math.random()*ww*.8+ww*.2;
             var chary=hh/2;//Math.random()*hh*.8+ww*.2;
             charx=Math.random()*ww*.8+ww*.2;
@@ -178,10 +182,12 @@
 
             function moveLeft(){
                 rotX-=.1;
+            moved=true;
             }
 
             function moveRight(){
                 rotX+=.1;
+            moved=true;
             }
 
             function setXY(){
@@ -202,6 +208,7 @@
             }
 
             function moveUp(dist){
+            moved=true;
                 var yd = Math.sin(world.rotation.z)*dist;
                 var xd = Math.cos(world.rotation.z)*dist;
                 charx+=yd;
@@ -212,6 +219,7 @@
             }
 
             function moveDown(dist){
+            moved=true;
                 var yd = Math.sin(world.rotation.z)*dist;
                 var xd = Math.cos(world.rotation.z)*dist;
                 //plane.position.x+=yd;
@@ -262,6 +270,18 @@
             timer++;
             if(timer>5){
             timer=0;
+            if(moved){
+            randomrot=Math.random()*15*Math.PI/180;
+            if(Math.random()<.5){
+            randomrot=-randomrot;
+            }
+            } else {
+            randomrot=0;
+            }
+            moved=false;
+            char.rotation.z=randomrot;
+            //char.position.x=randomx;
+            //char.position.y=randomy;
             } else {
             return;
             }
