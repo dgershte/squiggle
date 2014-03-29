@@ -300,17 +300,17 @@
             var ctx=c.getContext("2d");
             ctx.clearRect(0,0,100,100);
             ctx.fillStyle="#FF0000";
-            ctx.fillRect(Math.floor(charx/ww*100),Math.floor(chary/hh*100),2,2);
+            ctx.fillRect(Math.floor(charx/ww*100),Math.floor(chary/hh*100),5,5);
 
 
             Object.keys(posns).forEach(function(key){
             var posn = posns[key];
             if(posn.p==1){
                 ctx.fillStyle="#0000FF";
-                ctx.fillRect(Math.floor(posn.x/ww*100),Math.floor(posn.y/hh*100),2,2);
+                ctx.fillRect(Math.floor(posn.x/ww*100),Math.floor(posn.y/hh*100),3,3);
                 } else {
                 ctx.fillStyle="#ff00ff";
-                ctx.fillRect(Math.floor(posn.x/ww*100),Math.floor(posn.y/hh*100),3,3);
+                ctx.fillRect(Math.floor(posn.x/ww*100),Math.floor(posn.y/hh*100),4,4);
                 }
             });
 
