@@ -69,9 +69,10 @@ padding:10px 20px;
 }
 
 #logo {
-position: fixed;
 height: 50px;
 bottom: 0;
+position: absolute;
+left: 451px;
 }
 
 #done {
