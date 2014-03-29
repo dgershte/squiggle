@@ -39,31 +39,97 @@
     			canvas.clear();	
 				addObject(image);
 			}
-            function addObject(img){
-                var image = document.createElement( 'img' );
-            	var texture = new THREE.Texture( image );
-                image.onload = function()  {
-                    texture.needsUpdate = true;
-                };
-                image.src = img;
+            var char = null;
+            var keys = new Array();
+            var rotX=0;
+            var world = new THREE.Object3D();
 
-                 var material = new THREE.MeshBasicMaterial({map:texture});
-                 var geometry = new THREE.PlaneGeometry(100,100);
-                 var mesh = new THREE.Mesh(geometry,material);
-                 material.side=THREE.DoubleSide;
+            function addObject(img){
+                var str ='char.png';
+                if(char!=null){
+                    str='tree.png';
+                }
+                char="";
+
+                var image = document.createElement( 'img' );
+                image.onload = function()  {
+            		var texture = new THREE.Texture( image );
+                    texture.needsUpdate = true;
+                    var material = new THREE.MeshBasicMaterial({map:texture});
+                    var geometry = new THREE.PlaneGeometry(100,100);
+                    var mesh = new THREE.Mesh(geometry,material);
+                    material.side=THREE.DoubleSide;
                     mesh.rotation.x+=Math.PI/2;
                     mesh.position.z+=100/2;
-                    plane.add(mesh);
+					if(img=='char.png'){
+                        char=mesh;
+                        scene.add(char);
+                    } else {
+                        mesh.position.x=Math.random()*100;
+                        mesh.position.y=Math.random()*100;
+                        plane.add(mesh);
+                    }
+                };
+                image.src = img;
+                
             }
             // revolutions per second
             var angularSpeed = 0.2; 
             var lastTime = 0;
 
+            function moveLeft(){
+                rotX-=.1;
+            }
+
+            function moveRight(){
+                rotX+=.1;
+            }
+
+            function moveUp(){
+                var yd = Math.sin(world.rotation.z)*10;
+                var xd = Math.cos(world.rotation.z)*10;
+                plane.position.x-=yd;
+                plane.position.y-=xd;
+            }
+
+            function moveDown(){
+                var yd = Math.sin(world.rotation.z)*10;
+                var xd = Math.cos(world.rotation.z)*10;
+                plane.position.x+=yd;
+                plane.position.y+=xd;
+            }
+
+            function checkMove(){
+                if (keys['38']) {
+                // up arrow
+                if(char!=null){
+                    moveUp();
+                    }
+                }
+                if (keys['40']) {
+                // up arrow
+                if(char!=null){
+                    moveDown();
+                    }
+                }
+                if (keys['37']) {
+                    moveLeft();
+                }
+                if (keys['39']) {
+                    moveRight();
+                }
+            }
+
             // this function is executed on each animation frame
             function animate(){
+                checkMove();
                 // render
-                var angleChange=.01;
-                plane.rotation.z+=angleChange;
+                var angleChange=rotX;
+                world.rotation.z=angleChange;
+                for ( var i = 0, l = plane.children.length; i < l; i ++ ) {
+                    plane.children[ i ].rotation.y=-angleChange;
+                    //lookAt( sphere.position );
+                }
                 renderer.render(scene, camera);
 
                 // request new frame
@@ -79,21 +145,35 @@
 
             // camera
             var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-            camera.position.y = -450;
+            camera.position.y = -300;
             camera.position.z = 300;
-            camera.rotation.x = 45 * (Math.PI / 180);
+            camera.rotation.x = 60 * (Math.PI / 180);
 
             // scene
             var scene = new THREE.Scene();
 
             // plane
-            var plane = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), new THREE.MeshNormalMaterial());
+            var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000), new THREE.MeshNormalMaterial());
             plane.overdraw = true;
-            scene.add(plane);
-            addObject();
+            scene.add(world);
+            world.add(plane);
+            addObject('char.png');
 
             // start animation
             animate();
+
+            //addlisteners();
+            document.onkeyup = checkKeyUp;
+            document.onkeydown = checkKey;
+
+            function checkKeyUp(e) {
+                keys[e.keyCode]=false;
+            }
+
+            function checkKey(e) {
+                e = e || window.event;
+                keys[e.keyCode]=true;
+            }
         </script>
     </body>
 </html>
