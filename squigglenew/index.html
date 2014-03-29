@@ -10,20 +10,50 @@
     </head>
     <body>
         <div id="container"></div>
+		<canvas id="c" width="400px" height="400px"></canvas>
+		<div id="done" onclick="doneDrawing()">done</div>
         <script src="Three.js"></script>
+		<script src="jquery.js"></script>
+		<script src="fabric.min.js"></script>
         <script defer="defer">
+
+			$(document).ready(function() {
+
+				canvas = new fabric.Canvas('c');
+				canvas.freeDrawingBrush.width = 10;
+				canvas.freeDrawingBrush.color = '#000';
+				canvas.isDrawingMode = true;
+				canvas.width = document.documentElement.clientWidth;
+				canvas.height = document.documentElement.clientHeight;
+				canvas.on("after:render", function() {canvas.calcOffset();});
+
+			});
+
             var objects = new Array();
-            function addObject(){
-                var img=new Image;
-                var texture = THREE.ImageUtils.loadTexture('tree.png', {}, function() {
-                    var material = new THREE.MeshBasicMaterial({map:texture});
-                    var geometry = new THREE.PlaneGeometry(100,100);
-                    var mesh = new THREE.Mesh(geometry,material);
-                    material.side=THREE.DoubleSide;
+			function doneDrawing() {
+		    	var image = canvas.toDataURL("image/png");
+    			$("#done").attr({
+        			'download':'image.png',
+        			'href':image
+    			});
+    			canvas.clear();	
+				addObject(image);
+			}
+            function addObject(img){
+                var image = document.createElement( 'img' );
+            	var texture = new THREE.Texture( image );
+                image.onload = function()  {
+                    texture.needsUpdate = true;
+                };
+                image.src = img;
+
+                 var material = new THREE.MeshBasicMaterial({map:texture});
+                 var geometry = new THREE.PlaneGeometry(100,100);
+                 var mesh = new THREE.Mesh(geometry,material);
+                 material.side=THREE.DoubleSide;
                     mesh.rotation.x+=Math.PI/2;
                     mesh.position.z+=100/2;
                     plane.add(mesh);
-                });
             }
             // revolutions per second
             var angularSpeed = 0.2; 
