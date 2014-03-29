@@ -7,12 +7,15 @@
                 padding: 0px;
             }
         </style>
+		<link rel="stylesheet" href="index.css" type="text/css"></link>
     </head>
     <body>
         <div id="container"></div>
-		<canvas id="c" width="400px" height="400px"></canvas>
-		<div id="done" onclick="doneDrawing()">done</div>
-        <script src="Three.js"></script>
+		<div id="canvasContainer">
+			<canvas id="c" width="400px" height="400px"></canvas>
+			<div id="done" onclick="doneDrawing()">done</div>
+        </div>
+		<script src="Three.js"></script>
 		<script src="jquery.js"></script>
 		<script src="fabric.min.js"></script>
         <script defer="defer">
