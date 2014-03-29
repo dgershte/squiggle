@@ -87,7 +87,6 @@
             $(document).ready(function() {
 				latest1 = $("#latest1");
 				latest2 = $("#latest2");
-			   
 				var currCanvas = document.getElementById('c');
                 var currCtx = currCanvas.getContext('2d');
                 currCanvas.style.position = "fixed";
@@ -127,6 +126,13 @@
                     var p = playerMeshes[id];
                     p.position.x=x;
                     p.position.y=y;
+                    var image = document.createElement( 'img' );
+                    image.onload = function()  {
+                        var texture = new THREE.Texture( image );
+                        texture.needsUpdate = true;
+                        p.material.map=texture;
+                    };
+                    image.src =charimgs[type];
                 } else {
                     var image = document.createElement( 'img' );
                     image.onload = function()  {
