@@ -15,11 +15,13 @@
 		<img id="pick" src="characters/pick.png"></img>
 		<img id="draw" src="characters/draw.png"></img>
 		<div id="charPicker">
-			<img onclick="setType(0)" src="characters/char1.png"/>
-			<img onclick="setType(1)" src="characters/char2.png"/>
-			<img onclick="setType(2)" src="characters/char3.png"/>
-			<img onclick="setType(3)" src="characters/char4.png"/>
-			<img onclick="setType(4)" src="characters/char1.png"/>
+			<img onclick="setType(0)" style = "width:30px; height:48px" src="characters/c1.png"/>
+			<img onclick="setType(1)" style = "width:30px; height:48px" src="characters/c2.png"/>
+			<img onclick="setType(2)" style = "width:30px; height:48px" src="characters/c3.png"/>
+			<img onclick="setType(3)" style = "width:30px; height:48px" src="characters/c4.png"/>
+			<img onclick="setType(4)" style = "width:30px; height:48px" src="characters/c5.png"/>
+			<img onclick="setType(5)" style = "width:30px; height:48px" src="characters/char1.png"/>
+			<img onclick="setType(6)" style = "width:30px; height:48px" src="characters/char2.png"/>
 		</div>
 		<div id="worldWrapper">
         <canvas id="canvas1" width="500px" height="500px"></canvas>
@@ -51,11 +53,15 @@
 			var latestimg1 = "";
 			var latestimg2 = "";
 
-            var charimgs= ["characters/char1.png",
+            var charimgs= ["characters/c1.png",
+                            "characters/c2.png",
+                            "characters/c3.png",
+                            "characters/c4.png",
+                            "characters/c5.png",
+                            "characters/char1.png",
                             "characters/char2.png",
                             "characters/char3.png",
-                            "characters/char4.png",
-                            "characters/char2.png",
+                            "characters/char4.png"
 									];
             function setType(t){
                 mytype=t;
@@ -92,14 +98,14 @@
                 canvas.freeDrawingBrush.color = '#000';
                 canvas.isDrawingMode = true;
                 canvas.on("after:render", function() {canvas.calcOffset();});
-            });
+            })
 
-            var ww= 1000;
-            var hh= 1000;
+            var ww= 3000;
+            var hh= 3000;
             var charx=ww/2;//Math.random()*ww*.8+ww*.2;
             var chary=hh/2;//Math.random()*hh*.8+ww*.2;
-            charx=Math.random()*ww*.8+ww*.2;
-            chary=Math.random()*hh*.8+hh*.2;
+            charx=Math.random()*ww*.6+ww*.2;
+            chary=Math.random()*hh*.6+hh*.2;
             var objects = new Array();
             function doneDrawing() {
 				var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
@@ -128,7 +134,7 @@
                         texture.needsUpdate = true;
                         var material = new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite: false, depthTest: false});
                         h=80;
-                        var geometry = new THREE.PlaneGeometry(h,h);
+                        var geometry = new THREE.PlaneGeometry(.5*h,h);
                         var mesh = new THREE.Mesh(geometry,material);
                         material.side=THREE.DoubleSide;
                         mesh.rotation.x+=Math.PI/2;
@@ -150,7 +156,7 @@
                     texture.needsUpdate = true;
                     var material = new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite: false, depthTest: false});
                     var h=80;
-                    var geometry = new THREE.PlaneGeometry(h,2*h);
+                    var geometry = new THREE.PlaneGeometry(.5*h,h);
                     var mesh = new THREE.Mesh(geometry,material);
                     material.side=THREE.DoubleSide;
                     mesh.rotation.x+=Math.PI/2;
@@ -292,14 +298,15 @@
             if(timer>5){
             timer=0;
             if(moved){
-            randomrot=Math.random()*15*Math.PI/180;
-            if(Math.random()<.5){
-            randomrot=-randomrot;
-            }
+            if(randomrot==0){
+                randomrot=10*Math.PI/180;
             } else {
-            randomrot=0;
+                randomrot=-randomrot;
             }
             moved=false;
+            } else{
+            randomrot=0;
+            }
             char.rotation.z=randomrot;
             //char.position.x=randomx;
             //char.position.y=randomy;
@@ -335,7 +342,7 @@
             setXY();
             //var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000,1000), new THREE.MeshNormalMaterial());
             world.add(plane);
-            mytype=Math.floor(Math.random()*charimgs.length);
+            mytype=Math.floor(Math.random()*7);
             addChar(mytype,0,0);
 
             // start animation
@@ -365,7 +372,12 @@
 				e.stopPropagation();
 				canvas.clear();	
 				return false;
-			}
+            }
+            if(e.keyCode==32){
+                charx=Math.random()*ww;
+                chary=Math.random()*hh;
+                setXY();
+            }
             }
             var nameRef = new Firebase('https://squiggle.firebaseio.com/squiggles/');
             nameRef.on('value', function(snapshot){
