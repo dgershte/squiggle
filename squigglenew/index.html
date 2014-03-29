@@ -34,12 +34,31 @@
 
             var charimgs= ["characters/character1.png",
                             "characters/character2.png"];
+            function setType(t){
+                mytype=t;
+                var image = document.createElement( 'img' );
+                image.onload = function()  {
+                    var texture = new THREE.Texture( image );
+                    texture.needsUpdate = true;
+                    char.material.map=texture;
+                    /*
+                    var material = new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite: false, depthTest: false});
+                    var h=80;
+                    var geometry = new THREE.PlaneGeometry(h,h);
+                    var mesh = new THREE.Mesh(geometry,material);
+                    material.side=THREE.DoubleSide;
+                    mesh.rotation.x+=Math.PI/2;
+                    mesh.position.z+=h/2;
+                    char=mesh;
+                    scene.add(char);*/
+                };
+                image.src =charimgs[mytype];
+            }
 
             $(document).ready(function() {
                 var currCanvas = document.getElementById('c');
                 var currCtx = currCanvas.getContext('2d');
                 currCanvas.style.position = "fixed";
-                
 				currCanvas.style.top = 0;
                 currCanvas.style.left = 0;
                 canvas = new fabric.Canvas('c');
@@ -49,10 +68,12 @@
                 canvas.on("after:render", function() {canvas.calcOffset();});
 
             });
-            var ww= 10000;
-            var hh= 10000;
+            var ww= 4000;
+            var hh= 4000;
             var charx=ww/2;//Math.random()*ww*.8+ww*.2;
             var chary=hh/2;//Math.random()*hh*.8+ww*.2;
+            charx=Math.random()*ww*.8+ww*.2;
+            chary=Math.random()*hh*.8+hh*.2;
             var objects = new Array();
             function doneDrawing() {
 				var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
@@ -91,7 +112,6 @@
                         playerMeshes[id]=mesh;
                     };
                     image.src = charimgs[type];
-                    $("#collection").append(image);
                 }
 
             }
@@ -112,7 +132,6 @@
                     scene.add(char);
                 };
                 image.src =charimgs[mytype];
-                $("#collection").append(image);
             }
 
             function addObject(img,saveImg,x,y){
@@ -214,6 +233,8 @@
 
             // this function is executed on each animation frame
             function animate(){
+            //change type here
+            //setType(mytype);
             checkMove();
             // render
             var angleChange=rotX;
@@ -262,6 +283,7 @@
             setXY();
             //var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000,1000), new THREE.MeshNormalMaterial());
             world.add(plane);
+            mytype=Math.floor(Math.random()*charimgs.length);
             addChar(mytype,0,0);
 
             // start animation
