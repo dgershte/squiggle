@@ -32,19 +32,14 @@
             $(document).ready(function() {
                 var currCanvas = document.getElementById('c');
                 var currCtx = currCanvas.getContext('2d');
-                var viewportWidth = window.innerWidth;
-                var viewportHeight = window.innerHeight;
                 currCanvas.style.position = "fixed";
-                currCanvas.setAttribute("width", viewportWidth);
-                currCanvas.setAttribute("height", viewportHeight);
-                currCanvas.style.top = 0;
+                
+				currCanvas.style.top = 0;
                 currCanvas.style.left = 0;
                 canvas = new fabric.Canvas('c');
                 canvas.freeDrawingBrush.width = 10;
                 canvas.freeDrawingBrush.color = '#000';
                 canvas.isDrawingMode = true;
-                canvas.width = document.documentElement.clientWidth;
-                canvas.height = document.documentElement.clientHeight;
                 canvas.on("after:render", function() {canvas.calcOffset();});
 
             });
