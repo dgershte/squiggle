@@ -83,8 +83,8 @@
                 canvas.on("after:render", function() {canvas.calcOffset();});
             });
 
-            var ww= 1000;
-            var hh= 1000;
+            var ww= 2500;
+            var hh= 2500;
             var charx=ww/2;//Math.random()*ww*.8+ww*.2;
             var chary=hh/2;//Math.random()*hh*.8+ww*.2;
             charx=Math.random()*ww*.8+ww*.2;
@@ -192,16 +192,16 @@
 
             function setXY(){
                 if(charx<0){
-                    charx=0;
-                }
-                if(chary<0){
-                    chary=0;
-                }
-                if(charx>ww){
                     charx=ww;
                 }
-                if(chary>hh){
+                if(chary<0){
                     chary=hh;
+                }
+                if(charx>ww){
+                    charx=0;
+                }
+                if(chary>hh){
+                    chary=0;
                 }
                 plane.position.x=-charx;
                 plane.position.y=-chary;
@@ -351,6 +351,10 @@
             var x= obj.x;
             var y= obj.y;
             addObject(img,false,x,y);
+            addObject(img,false,x-ww,y-hh);
+            addObject(img,false,x+ww,y+hh);
+            addObject(img,false,x-ww,y+hh);
+            addObject(img,false,x+ww,y-hh);
             });
             });
             var playerRef = new Firebase('https://squiggle.firebaseio.com/players/');
