@@ -10,32 +10,35 @@
         <link rel="stylesheet" href="index.css" type="text/css"></link>
     </head>
     <body>
-		<img id="logo" src="squiggle.png"></img>
+        <img id="logo" src="squiggle.png"></img>
         <div id="container"></div>
         <canvas id="canvas1" width="800px" height="800px"></canvas>
         <div id="canvasWrapper">
-            <canvas id="c" width="300px" height="300px"></canvas>
-        	<div id="collection"></div>
-		</div>
+            <canvas id="c"></canvas>
+            <div id="collection"></div>
+        </div>
         <script src='https://cdn.firebase.com/v0/firebase.js'></script>
         <script src="Three.js"></script>
         <script src="jquery.js"></script>
         <script src="fabric.min.js"></script>
         <script defer="defer">
             var objs=new Object();
+            var players = new Object();
+            var playerMeshes = new Object();
+            var pid=null;
             var charstr="characters/character1.png"
 
-			$(document).ready(function() {
-/*			var currCanvas = document.getElementById('c');
-var currCtx = currCanvas.getContext('2d');
-//var viewportWidth = window.innerWidth;
-var viewportHeight = window.innerHeight;
-currCanvas.style.position = "fixed";
-//currCanvas.setAttribute("width", viewportWidth);
-currCanvas.setAttribute("height", viewportHeight);
-currCanvas.style.top = 0;
-currCanvas.style.left = 0;
- */               canvas = new fabric.Canvas('c');
+            $(document).ready(function() {
+                var currCanvas = document.getElementById('c');
+                var currCtx = currCanvas.getContext('2d');
+                var viewportWidth = window.innerWidth;
+                var viewportHeight = window.innerHeight;
+                currCanvas.style.position = "fixed";
+                currCanvas.setAttribute("width", viewportWidth);
+                currCanvas.setAttribute("height", viewportHeight);
+                currCanvas.style.top = 0;
+                currCanvas.style.left = 0;
+                canvas = new fabric.Canvas('c');
                 canvas.freeDrawingBrush.width = 10;
                 canvas.freeDrawingBrush.color = '#000';
                 canvas.isDrawingMode = true;
@@ -46,8 +49,8 @@ currCanvas.style.left = 0;
             });
             var ww= 10000;
             var hh= 10000;
-            var charx=ww/2;//Math.random()*ww;
-            var chary=hh/2;//Math.random()*hh;
+            var charx=Math.random()*ww*.8+ww*.2;
+            var chary=Math.random()*hh*.8+ww*.2;
             var objects = new Array();
             function doneDrawing() {
 				var objs = canvas.getObjects();  
@@ -63,6 +66,37 @@ currCanvas.style.left = 0;
             var keys = new Array();
             var rotX=0;
             var world = new THREE.Object3D();
+            function addPlayer(img,saveImg,x,y){
+                if(playerMeshes[id]){
+                    var p = playerMeshes[id];
+                    p.position.x=x;
+                    p.position.y=y;
+                    } else {
+                    var image = document.createElement( 'img' );
+                    image.onload = function()  {
+                        var texture = new THREE.Texture( image );
+                        texture.needsUpdate = true;
+                        var material = new THREE.MeshBasicMaterial({map:texture});
+                        material.transparent=true;
+                        var h = 150;
+                        if(img==charstr){
+                            h=80;
+                        }
+                        var geometry = new THREE.PlaneGeometry(h,h);
+                        var mesh = new THREE.Mesh(geometry,material);
+                        material.side=THREE.DoubleSide;
+                        mesh.rotation.x+=Math.PI/2;
+                        mesh.position.z+=h/2;
+                        mesh.position.x=x;
+                        mesh.position.y=y;
+                        plane.add(mesh);
+                        playerMeshes[id]=mesh;
+                    };
+                    image.src = img;
+                    $("#collection").append(image);
+                }
+
+            }
 
             function addObject(img,saveImg,x,y){
                 if(saveImg){
@@ -76,22 +110,26 @@ currCanvas.style.left = 0;
                     texture.needsUpdate = true;
                     var material = new THREE.MeshBasicMaterial({map:texture});
                     material.transparent=true;
-                    var geometry = new THREE.PlaneGeometry(100,100);
+                    var h = 150;
+                    if(img==charstr){
+                        h=80;
+                    }
+                    var geometry = new THREE.PlaneGeometry(h,h);
                     var mesh = new THREE.Mesh(geometry,material);
                     material.side=THREE.DoubleSide;
                     mesh.rotation.x+=Math.PI/2;
-                    mesh.position.z+=100/2;
+                    mesh.position.z+=h/2;
                     if(img==charstr){
                         char=mesh;
                         scene.add(char);
-                    } else {
+                        } else {
                         mesh.position.x=x;
                         mesh.position.y=y;
                         plane.add(mesh);
                     }
                 };
                 image.src = img;
-				$("#collection").append(image);
+                $("#collection").append(image);
             }
             // revolutions per second
             var angularSpeed = 0.2; 
@@ -174,6 +212,11 @@ currCanvas.style.left = 0;
                     //lookAt( sphere.position );
                 }
                 renderer.render(scene, camera);
+                if(pid!=null){
+                    playerRef.child(pid).set({squiggle:img,x:charx,y:chary});
+                    } else {
+                    pid = playerRef.push({squiggle:img,x:charx,y:chary});
+                }
 
                 // request new frame
                 requestAnimationFrame(function(){
@@ -219,11 +262,11 @@ currCanvas.style.left = 0;
             function checkKey(e) {
                 e = e || window.event;
                 keys[e.keyCode]=true;
-				if(e.keyCode == 13) {
-					doneDrawing();
-				}
+                if(e.keyCode == 13) {
+                    doneDrawing();
+                }
             }
-            var nameRef = new Firebase('https://squiggle.firebaseio.com/');
+            var nameRef = new Firebase('https://squiggle.firebaseio.com/squiggles/');
             nameRef.on('value', function(snapshot){
                 var val = snapshot.val();
                 if(val==null){
@@ -232,7 +275,7 @@ currCanvas.style.left = 0;
                 Object.keys(val).forEach(function(key){
                     if(!objs[key]){
                         objs[key]=true;
-                    } else {
+                        } else {
                         return;
                     }
                     var obj = val[key];
@@ -240,6 +283,25 @@ currCanvas.style.left = 0;
                     var x= obj.x;
                     var y= obj.y;
                     addObject(img,false,x,y);
+                });
+            });
+            var playerRef = new Firebase('https://squiggle.firebaseio.com/players/');
+            playerRef.on('value', function(snapshot){
+                var val = snapshot.val();
+                if(val==null){
+                    return;
+                }
+                Object.keys(val).forEach(function(key){
+                    if(!players[key]){
+                        players[key]=true;
+                        } else {
+                        return;
+                    }
+                    var obj = val[key];
+                    var img= charstr;
+                    var x= obj.x;
+                    var y= obj.y;
+                    addPlayer(img,false,x,y);
                 });
             });
         </script>
