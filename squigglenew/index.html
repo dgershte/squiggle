@@ -25,7 +25,7 @@
 		</div>
 		<div id="worldWrapper">
         <canvas id="canvas1" width="500px" height="500px"></canvas>
-            <canvas id="minimap" width="100px" height="100px" style="position:absolute; border:1px solid black;margin-left:-110px; margin-top:5px;"></canvas>
+            <canvas id="minimap" width="100px" height="100px" style="position:absolute; border:1px solid #eee;margin-left:-110px; margin-top:5px;"></canvas>
 		</div>
         <div id="canvasWrapper">
             <canvas id="c" width="300px" height="300px"></canvas>
@@ -108,8 +108,8 @@
                 canvas.on("after:render", function() {canvas.calcOffset();});
             })
 
-            var ww= 5000;
-            var hh= 5000;
+            var ww= 3000;
+            var hh= 3000;
             var charx=ww/2;//Math.random()*ww*.8+ww*.2;
             var chary=hh/2;//Math.random()*hh*.8+ww*.2;
             charx=Math.random()*ww*.6+ww*.2;
@@ -210,7 +210,7 @@
                         mesh.position.x=x;
                         mesh.position.y=y;
                         plane.add(mesh);
-                        posns[image]=new point(x,y,0);
+                        posns[image.src]=new point(x,y,0);
                 };
                 image.src = img;
 				var tmplatest = latestimg1;
@@ -299,18 +299,18 @@
             var c=document.getElementById("minimap");
             var ctx=c.getContext("2d");
             ctx.clearRect(0,0,100,100);
-            ctx.fillStyle="#FF0000";
-            ctx.fillRect(Math.floor(charx/ww*100),Math.floor(chary/hh*100),5,5);
+            ctx.fillStyle="rgb(31,255,0)";
+            ctx.fillRect(Math.floor(charx/ww*95),Math.floor(95-chary/hh*95),6,6);
 
 
             Object.keys(posns).forEach(function(key){
             var posn = posns[key];
             if(posn.p==1){
                 ctx.fillStyle="#0000FF";
-                ctx.fillRect(Math.floor(posn.x/ww*100),Math.floor(posn.y/hh*100),3,3);
+                ctx.fillRect(Math.floor(posn.x/ww*97),Math.floor(97-posn.y/hh*97),3,3);
                 } else {
                 ctx.fillStyle="#ff00ff";
-                ctx.fillRect(Math.floor(posn.x/ww*100),Math.floor(posn.y/hh*100),4,4);
+                ctx.fillRect(Math.floor(posn.x/ww*96),Math.floor(96-posn.y/hh*96),4,4);
                 }
             });
 
