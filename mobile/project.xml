@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="Basic Test" package="away3d.examples.BasicTest" version="1.0.0" />
+	<app main="BasicTest" file="BasicTest" path="export" />
+
+    <window width="1024" height="700" if="desktop" />
+    <window orientation="landscape" fps="60" vsync="true"/>
+    <window depth-buffer="true"/>
+	
+	<source path="src" />
+
+	<classpath path="../openfl-stage3d/src" />
+	<classpath path="../stage3d-glsl-master/src" />
+	<classpath path="../away3d-core-openfl/src" />
+	
+	<haxelib name="openfl" />
+    <assets path="assets"/>
+
+</project>
