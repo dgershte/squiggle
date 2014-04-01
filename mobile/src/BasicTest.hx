@@ -328,7 +328,7 @@ class BasicTest extends Sprite
            // _view.stage3DProxy.setRenderCallback(null);
            // _view.stage3DProxy.context3D.removeOGL();
            //_view.stage3DProxy.dispose();
-           _view.dispose();
+           //_view.dispose();
            // Lib.current.stage.removeChild(_view);
            // _view=null;
         }   
