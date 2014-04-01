@@ -830,12 +830,10 @@ class View3D  extends EventDispatcher {
 
     private function onAddedToStage(event:Event):Void {
         if (_addedToStage) {
-
             return;
         }
         _addedToStage = true;
         if (_stage3DProxy == null) {
-			  
             _stage3DProxy = Stage3DManager.getInstance(stage).getFreeStage3DProxy(_forceSoftware, _profile);
             _stage3DProxy.addEventListener(Stage3DEvent.VIEWPORT_UPDATED, onViewportUpdated);
         }

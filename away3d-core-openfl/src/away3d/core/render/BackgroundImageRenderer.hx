@@ -4,6 +4,7 @@ import flash.display3D.shaders.AGLSLShaderUtils;
 import flash.Vector;
 import away3d.core.managers.Stage3DProxy;
 import away3d.textures.Texture2DBase;
+import away3d.events.Stage3DEvent;
 import flash.display3D.Context3D;
 import flash.display3D.Context3DProgramType;
 import flash.display3D.Context3DTextureFormat;
@@ -11,6 +12,7 @@ import flash.display3D.Context3DVertexBufferFormat;
 import flash.display3D.IndexBuffer3D;
 import flash.display3D.Program3D;
 import flash.display3D.VertexBuffer3D;
+import flash.events.Event;
 
 class BackgroundImageRenderer {
     public var stage3DProxy(get_stage3DProxy, set_stage3DProxy):Stage3DProxy;
@@ -33,7 +35,15 @@ class BackgroundImageRenderer {
 
     public function set_stage3DProxy(value:Stage3DProxy):Stage3DProxy {
         if (value == _stage3DProxy) return value;
+        if (value==null) {
+            if (_stage3DProxy!=null) _stage3DProxy.removeEventListener(Stage3DEvent.CONTEXT3D_CREATED, onContextUpdate);
+            _stage3DProxy = null;
+            _context = null;
+            return null;
+        }
         _stage3DProxy = value;
+        _context = _stage3DProxy.context3D;
+        _stage3DProxy.addEventListener(Stage3DEvent.CONTEXT3D_CREATED, onContextUpdate);
         removeBuffers();
         return value;
     }
@@ -72,25 +82,17 @@ class BackgroundImageRenderer {
     }
 
     public function render():Void {
-		//todo 
-		/*
-        var context:Context3D = _stage3DProxy.context3D;
-        if (context != _context) {
-            removeBuffers();
-            _context = context;
-        }
-        if (context == null) return;
-        if (_vertexBuffer == null) initBuffers(context);
-		
-        context.setProgram(_program3d);
-        context.setTextureAt(0, _texture.getTextureForStage3D(_stage3DProxy));
-        context.setVertexBufferAt(0, _vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
-        context.setVertexBufferAt(1, _vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2);
-        context.drawTriangles(_indexBuffer, 0, 2);
-        context.setVertexBufferAt(0, null);
-        context.setVertexBufferAt(1, null);
-        context.setTextureAt(0, null);
-		*/
+        if (_context==null) return;
+        if (_vertexBuffer==null) initBuffers(_context);
+
+        _context.setProgram(_program3d);
+        _context.setTextureAt(0, _texture.getTextureForStage3D(_stage3DProxy));
+        _context.setVertexBufferAt(0, _vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
+        _context.setVertexBufferAt(1, _vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2);
+        _context.drawTriangles(_indexBuffer, 0, 2);
+        _context.setVertexBufferAt(0, null);
+        _context.setVertexBufferAt(1, null);
+        _context.setTextureAt(0, null);
     }
 
     private function initBuffers(context:Context3D):Void {
@@ -119,6 +121,20 @@ class BackgroundImageRenderer {
     public function set_texture(value:Texture2DBase):Texture2DBase {
         _texture = value;
         return value;
+    }
+
+    private function onContextUpdate(event : Event) : Void
+    {
+        _context = _stage3DProxy.context3D;
+
+        if (_vertexBuffer==null) {
+            _vertexBuffer.dispose();
+            _vertexBuffer = null;
+            _program3d.dispose();
+            _program3d = null;
+            _indexBuffer.dispose();
+            _indexBuffer = null;
+        }
     }
 
 }

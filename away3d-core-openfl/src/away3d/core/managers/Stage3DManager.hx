@@ -34,9 +34,9 @@ class Stage3DManager {
         if (Stage3DManagerSingletonEnforcer == null) throw new Error("This class is a multiton and cannot be instantiated manually. Use Stage3DManager.getInstance instead.");
         _stage = stage;
         stage3DsLength = 1;
-#if flash
-			stage3DsLength = _stage.stage3Ds.length;
-		#end
+//#if flash
+//			stage3DsLength = _stage.stage3Ds.length;
+//		#end
         if (_stageProxies == null) _stageProxies = new Vector<Stage3DProxy>(stage3DsLength, true);
 
     }

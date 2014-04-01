@@ -501,7 +501,7 @@ class Stage3DProxy extends EventDispatcher {
 	 */
 
     private function onContext3DUpdate(event:Event):Void {
-
+        trace("lost");
         if (_stage3D.context3D != null) {
             var hadContext:Bool = (_context3D != null);
             _context3D = _stage3D.context3D;
@@ -516,11 +516,10 @@ class Stage3DProxy extends EventDispatcher {
 
             if (_backBufferWidth != 0 && _backBufferHeight != 0) {
                 _context3D.configureBackBuffer(_backBufferWidth, _backBufferHeight, _antiAlias, _enableDepthAndStencil);
-
             }
-
-            setRenderCallback(_callbackMethod);
             
+            setRenderCallback(_callbackMethod);
+            //trace("dispatch recreate "+(hadContext?"yes":"no"));
             dispatchEvent(new Stage3DEvent((hadContext) ? Stage3DEvent.CONTEXT3D_RECREATED : Stage3DEvent.CONTEXT3D_CREATED));
         }
 

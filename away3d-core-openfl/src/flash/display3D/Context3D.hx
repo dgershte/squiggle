@@ -124,6 +124,16 @@ class Context3D
       
    }
 
+   public function removeOGL():Void {
+      var stage = Lib.current.stage;
+       stage.removeChild(ogl);
+   }
+
+   public function addOGL():Void {
+      var stage = Lib.current.stage;
+       stage.addChildAt(ogl,0);
+   }
+
    public function clear(red:Float = 0, green:Float = 0, blue:Float = 0, alpha:Float = 1, depth:Float = 1, stencil:Int = 0, mask:Int = Context3DClearMask.ALL):Void 
    {
       if (!drawing) 

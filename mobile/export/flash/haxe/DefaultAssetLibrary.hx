@@ -42,6 +42,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("assets/char.png", Reflect.field (AssetType, "image".toUpperCase ()));
 		className.set ("assets/char.xml", __ASSET__assets_char_xml);
 		type.set ("assets/char.xml", Reflect.field (AssetType, "text".toUpperCase ()));
+		className.set ("assets/tree.png", __ASSET__assets_tree_png);
+		type.set ("assets/tree.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		className.set ("assets/trees.xml", __ASSET__assets_trees_xml);
+		type.set ("assets/trees.xml", Reflect.field (AssetType, "text".toUpperCase ()));
 		className.set ("assets/white.png", __ASSET__assets_white_png);
 		type.set ("assets/white.png", Reflect.field (AssetType, "image".toUpperCase ()));
 		
@@ -51,6 +55,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		addExternal("assets/c3.png", "image", "assets/c3.png");
 		addExternal("assets/char.png", "image", "assets/char.png");
 		addExternal("assets/char.xml", "text", "assets/char.xml");
+		addExternal("assets/tree.png", "image", "assets/tree.png");
+		addExternal("assets/trees.xml", "text", "assets/trees.xml");
 		addExternal("assets/white.png", "image", "assets/white.png");
 		
 		
@@ -520,10 +526,14 @@ class DefaultAssetLibrary extends AssetLibrary {
 class __ASSET__assets_c3_png extends flash.display.BitmapData { public function new () { super (0, 0); } }
 class __ASSET__assets_char_png extends flash.display.BitmapData { public function new () { super (0, 0); } }
 class __ASSET__assets_char_xml extends flash.utils.ByteArray { }
+class __ASSET__assets_tree_png extends flash.display.BitmapData { public function new () { super (0, 0); } }
+class __ASSET__assets_trees_xml extends flash.utils.ByteArray { }
 class __ASSET__assets_white_png extends flash.display.BitmapData { public function new () { super (0, 0); } }
 
 
 #elseif html5
+
+
 
 
 
