@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:74a9673dbe73a26f1d08ff0a82a42c58:b4eb65d30c82a93d2b7fd647981cd082:809ed21b36e20de8d81bb97000575d7b$ -->
-<TextureAtlas>
-    <SubTexture name="assets/tree.png" x="200" y="200"/>
-    <SubTexture name="assets/tree.png" x="100" y="100"/>
-    <SubTexture name="assets/tree.png" x="200" y="400"/>
-</TextureAtlas>

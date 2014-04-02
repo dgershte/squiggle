@@ -282,8 +282,8 @@ class Test2D extends Sprite
             for(poly in polygons){
                 if(Collision.getOverlap(new Point(char.z,char.z+char.height), new Point(poly.minZ,poly.maxZ))!=-1){
                     overlapVec =Collision.getOverlapCirclePoly(charPos,char.radius,poly.poly);
-                    overlapVec2 =Collision.getOverlapCirclePoly(charPos,char.radius*.95,poly.poly);
-                    if(overlapVec!=null){
+                    overlapVec2 =Collision.getOverlapCirclePoly(charPos,char.radius*.75,poly.poly);
+                    if(overlapVec2!=null){
                         if(overlapVec2!=null && char.lastZ>=poly.maxZ && char.z<=poly.maxZ){
                             //floor
                             if(char.yspd<=0){
@@ -294,16 +294,19 @@ class Test2D extends Sprite
                             //ceiling
                             char.stopJump(poly.minZ-char.height-1);
                             char.jump(0);
-                        } else if(char.z>=poly.minZ && char.z<poly.maxZ){
-                            //wall
-                            charPos = new Point(charPos.x+overlapVec.x*1.01,charPos.y+overlapVec.y*1.01);
-                            char.x=charPos.x;
-                            char.y=charPos.y;
                         }
-                    } else if(overlapVec==null && poly==char.lastPoly){
+                    } else if(poly==char.lastPoly){
                         //fall
                         char.lastPoly=null;
                         char.jump(0);
+                    }
+                    if(overlapVec!=null){
+                        if(char.z>=poly.minZ && char.z<poly.maxZ){
+                            //wall
+                            charPos = new Point(charPos.x+overlapVec.x,charPos.y+overlapVec.y);
+                            char.x=charPos.x;
+                            char.y=charPos.y;
+                        }
                     }
                 }
             }

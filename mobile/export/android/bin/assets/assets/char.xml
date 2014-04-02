@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:74a9673dbe73a26f1d08ff0a82a42c58:b4eb65d30c82a93d2b7fd647981cd082:809ed21b36e20de8d81bb97000575d7b$ -->
-<TextureAtlas imagePath="char.png">
-    <SubTexture name="char0001" x="2" y="164" width="38" height="73" frameX="-2" frameY="0" frameWidth="40" frameHeight="83"/>
-    <SubTexture name="char0002" x="42" y="2" width="40" height="69" frameX="0" frameY="-1" frameWidth="40" frameHeight="83"/>
-    <SubTexture name="char0003" x="2" y="87" width="38" height="75" frameX="-2" frameY="-2" frameWidth="40" frameHeight="83"/>
-    <SubTexture name="char0004" x="2" y="2" width="38" height="83" frameX="-2" frameY="0" frameWidth="40" frameHeight="83"/>
-</TextureAtlas>
