@@ -630,8 +630,10 @@ class View3D  extends EventDispatcher {
 
         else {
             _renderer.shareContext = _shareContext;
-            if (_shareContext) _renderer.render(_entityCollector, null, _scissorRect)
-            else _renderer.render(_entityCollector);
+            if (_shareContext){ _renderer.render(_entityCollector, null, _scissorRect);
+            }
+            else {_renderer.render(_entityCollector);
+            }
         }
 
         if (!_shareContext) {

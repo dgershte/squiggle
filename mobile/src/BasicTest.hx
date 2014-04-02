@@ -1,40 +1,3 @@
-/*
-
-   SkyBox example in Away3d
-
-Demonstrates:
-
-How to use a CubeTexture to create a SkyBox object.
-How to apply a CubeTexture to a material as an environment map.
-
-Code by Rob Bateman
-rob@infiniteturtles.co.uk
-http://www.infiniteturtles.co.uk
-
-This code is distributed under the MIT License
-
-Copyright (c) The Away Foundation http://www.theawayfoundation.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the “Software”), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
- */
-
 package;
 
 import away3d.cameras.lenses.*;
@@ -50,6 +13,7 @@ import flash.display.*;
 import flash.events.*;
 import flash.geom.Vector3D;
 import flash.geom.Point;
+import flash.geom.Rectangle;
 import flash.Vector;
 import haxe.xml.Fast;
 import openfl.Assets;
@@ -120,6 +84,7 @@ class TextureParser
 class BasicTest extends Sprite
 {		
     //engine variables
+    private var keys:Map<Int,Bool>;
     private var _view:View3D;
     private var deac:Bool=false;
 
@@ -128,6 +93,8 @@ class BasicTest extends Sprite
     private var _world:ObjectContainer3D;
     private var _plane:ObjectContainer3D;
     private var _charmesh:Mesh;
+
+    private var platformSize:Float = 100;
 
     var animation:Vector<Anim>;
     var objs:Vector<Mesh>;
@@ -139,12 +106,24 @@ class BasicTest extends Sprite
     var mousex:Float=0;
     var mousey:Float=0;
 
+    var yspd:Float=0;
+    var ypos:Float=0;
+    var grav:Float=2;
+    var starty:Float=-20;
+    var jumping:Bool=false;
+
+    var platforms:Vector<Rectangle>;
+
     public function new ()
     {
         super();
 
-                Lib.current.stage.addEventListener (Event.ACTIVATE, stage_onActivate);
-                        Lib.current.stage.addEventListener (Event.DEACTIVATE, stage_onDeactivate);
+        platforms = new Vector<Rectangle>();
+        platforms.push(new Rectangle(platformSize,platformSize,platformSize,platformSize));
+        keys = new Map<Int,Bool>();
+        Lib.current.stage.addEventListener (Event.ACTIVATE, stage_onActivate);
+        Lib.current.stage.addEventListener (Event.DEACTIVATE, stage_onDeactivate);
+
         pos = new Point(0,0);
         animation = TextureParser.parse("assets/char.xml");
         frames = animation.length;
@@ -208,6 +187,13 @@ class BasicTest extends Sprite
         _plane.addChild(_charmesh);
 
         _skyBox = new SkyBox(cubeTexture);
+var material:ColorMaterial = new ColorMaterial(0xFF00FF, 1);
+        material.addMethod(new FogMethod(600,1200,0xffffff));
+        var cube = new Mesh(new CubeGeometry(100,50,100,1,1,1),material);
+        cube.x=150;
+        cube.z=150;
+        cube.y=25;
+        _plane.addChild(cube);
 
         //setup the render loop
         _view = new View3D();
@@ -223,13 +209,23 @@ class BasicTest extends Sprite
         stage.addEventListener(Event.RESIZE, onResize);
         onResize();
 
-        var fps = new openfl.display.FPS(0, 0, 0xffffff);
+        var fps = new openfl.display.FPS(0, 0, 0);
         fps.scaleX = fps.scaleY = 3;
         this.addChild(fps);
 
         Lib.current.stage.addEventListener (MouseEvent.MOUSE_DOWN, mouseEventDown);
         Lib.current.stage.addEventListener (MouseEvent.MOUSE_UP, mouseEventUp);
         Lib.current.stage.addEventListener (MouseEvent.MOUSE_MOVE, mouseEventMove);
+        Lib.current.stage.addEventListener (KeyboardEvent.KEY_DOWN, keyDown);
+        Lib.current.stage.addEventListener (KeyboardEvent.KEY_UP, keyUp);
+    }
+
+    private function keyDown(e:KeyboardEvent):Void{
+        keys.set(e.keyCode,true);
+    }
+
+    private function keyUp(e:KeyboardEvent):Void{
+        keys.set(e.keyCode,false);
     }
 
     private function mouseEventDown(e:MouseEvent):Void {
@@ -249,14 +245,68 @@ class BasicTest extends Sprite
 
     private function _onEnterFrame(e:Event):Void
     {
+        var spd:Float = 10;
+        var rad:Float = Math.PI/180;
+        if(keys.get(32)){
+            keys.set(32,false);
+            if(!jumping){
+                jumping=true;
+                yspd=starty;
+            }
+        }
+        if(jumping){
+            yspd+=grav;
+            ypos+=yspd;
+            _charmesh.translate(new Vector3D(0,-1,0), yspd);
+            if(ypos>0){
+                _charmesh.translate(new Vector3D(0,-1,0), -ypos);
+                ypos=0;
+                yspd=0;
+                jumping=false;
+            } else if(yspd>0 && _charmesh.position.z>platformSize && _charmesh.position.z<platformSize*2){
+                if(_charmesh.position.x>platformSize && _charmesh.position.x<platformSize*2){
+                    if(ypos>-50){
+                        _charmesh.translate(new Vector3D(0,-1,0), -50-ypos);
+                        ypos=-50;
+                        yspd=0;
+                        jumping=false;
+                    }
+                }
+            }
+        } else {
+            if(ypos<0){
+                if(!(_charmesh.position.z>platformSize && _charmesh.position.z<platformSize*2) || !(_charmesh.position.x>platformSize && _charmesh.position.x<platformSize*2)){
+                    jumping=true;
+                    yspd=0;
+                }
+            }
+        }
+        if(keys.get(65)){
+            _world.rotationY+=5;
+        } else if(keys.get(68)){
+            _world.rotationY-=5;
+        }
+        if(keys.get(87)){
+            var xd = Math.sin(_world.rotationY*rad)*spd;
+            var yd = -Math.cos(_world.rotationY*rad)*spd;
+            _charmesh.translate(new Vector3D(1,0,0), -xd);
+            _charmesh.translate(new Vector3D(0,0,1), -yd);
+            _plane.translate(new Vector3D(1,0,0), xd);
+            _plane.translate(new Vector3D(0,0,1), yd);
+        } else if(keys.get(83)){
+            var xd = Math.sin(_world.rotationY*rad)*spd;
+            var yd = -Math.cos(_world.rotationY*rad)*spd;
+            _charmesh.translate(new Vector3D(1,0,0), xd);
+            _charmesh.translate(new Vector3D(0,0,1), yd);
+            _plane.translate(new Vector3D(1,0,0), -xd);
+            _plane.translate(new Vector3D(0,0,1), -yd);
+        }
         if(mouse){
-            var spd:Float = 5;
             if(mousex<_view.width/3){
                 _world.rotationY+=5;
             } else if(mousex>_view.width*2/3){
                 _world.rotationY-=5;
             }
-            var rad:Float = Math.PI/180;
             if(mousey<_view.height/3){
                 var xd = Math.sin(_world.rotationY*rad)*spd;
                 var yd = -Math.cos(_world.rotationY*rad)*spd;
@@ -299,6 +349,8 @@ class BasicTest extends Sprite
     {
         _view.width = stage.stageWidth;
         _view.height = stage.stageHeight;
+        if (_view.stage3DProxy != null)
+            _view.render();
     }
     private function stage_onActivate (event:Event):Void {
         if(!deac){
@@ -311,8 +363,10 @@ class BasicTest extends Sprite
         }
         _skyBox.material.smooth=!_skyBox.material.smooth;
         _skyBox.material.smooth=!_skyBox.material.smooth;
-        _view = new View3D();
-       // _view.getNewStage3D();
+        _view.stage3DProxy.dispatchEvent(new Event(Event.CONTEXT3D_CREATE));
+        /*
+           _view = new View3D();
+        // _view.getNewStage3D();
 
         //setup the camera
         _view.camera.z = -600;
@@ -320,16 +374,15 @@ class BasicTest extends Sprite
         _view.camera.lookAt(new Vector3D());
         _view.camera.lens = new PerspectiveLens(90);
         _view.scene.addChild(_world);
-        _view.scene.addChild(_skyBox);
+        _view.scene.addChild(_skyBox);*/
         //_view.stage3DProxy.setRenderCallback(_onEnterFrame);
     }   
-        private function stage_onDeactivate (event:Event):Void {
-            deac=true;
-           // _view.stage3DProxy.setRenderCallback(null);
-           // _view.stage3DProxy.context3D.removeOGL();
-           //_view.stage3DProxy.dispose();
-           //_view.dispose();
-           // Lib.current.stage.removeChild(_view);
-           // _view=null;
-        }   
+    private function stage_onDeactivate (event:Event):Void {
+        deac=true;
+        // _view.stage3DProxy.setRenderCallback(null);
+        // _view.stage3DProxy.context3D.removeOGL();
+        //_view.dispose();
+        // Lib.current.stage.removeChild(_view);
+        // _view=null;
+    }   
 }

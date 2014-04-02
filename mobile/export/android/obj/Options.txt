@@ -1,0 +1,2 @@
+ -DHXCPP_ARMV7="1" -Dandroid="1" -Dandroid-9="1" -Dandroid_9="1" -Dhaxe3="1" -Dhaxe_release="1" -Dhaxe_ver="3." -Dhxlibc="1" -Dlime_native="1" -Dmobile="1" -Dno-compilation="1" -Dno_compilation="1" -Dopenfl="1" -Dopenfl-native="1" -Dopenfl_native="1" -Dtools="1.3.0"
+/usr/lib/haxe/nme/hxcpp/3,1,22/

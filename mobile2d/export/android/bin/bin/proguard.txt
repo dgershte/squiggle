@@ -1,0 +1,3 @@
+# view AndroidManifest.xml #generated:14
+-keep class away3d.examples.BasicTest.MainActivity { <init>(...); }
+

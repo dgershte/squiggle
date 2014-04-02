@@ -501,7 +501,6 @@ class Stage3DProxy extends EventDispatcher {
 	 */
 
     private function onContext3DUpdate(event:Event):Void {
-        trace("lost");
         if (_stage3D.context3D != null) {
             var hadContext:Bool = (_context3D != null);
             _context3D = _stage3D.context3D;

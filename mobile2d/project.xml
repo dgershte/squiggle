@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="Test2D" package="com.squiggle.Test2D" version="1.0.0" />
+	<app main="Test2D" file="Test2D" path="export" />
+
+    <window width="960" height="640"/>
+    <window orientation="landscape" fps="30" vsync="true"/>
+    <window depth-buffer="true"/>
+	
+	<source path="src" />
+
+	<haxelib name="openfl" />
+    <assets path="assets"/>
+
+</project>
